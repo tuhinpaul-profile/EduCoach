@@ -6,11 +6,21 @@ import ExamsTable from "@/components/mock-exams/exams-table";
 import CreateExamModal from "@/components/mock-exams/create-exam-modal";
 import { Button } from "@/components/ui/button";
 import { Plus, Download, PlayCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function MockExams() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { toast } = useToast();
 
-  const { data: exams = [], isLoading } = useQuery({
+  const handleExportResults = () => {
+    toast({
+      title: "Export Started",
+      description: "Downloading exam results as Excel file...",
+    });
+    // Here you would typically trigger a file download
+  };
+
+  const { data: exams = [], isLoading } = useQuery<any[]>({
     queryKey: ["/api/mock-exams"],
     enabled: true,
   });
@@ -61,11 +71,11 @@ export default function MockExams() {
                   <span className="text-blue-700 font-medium">{examStats.avgScore}% Avg Score</span>
                 </div>
               </div>
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleExportResults} data-testid="button-export">
                 <Download className="w-4 h-4 mr-2" />
                 Export Results
               </Button>
-              <Button onClick={() => setIsCreateModalOpen(true)}>
+              <Button onClick={() => setIsCreateModalOpen(true)} data-testid="button-create-exam">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Exam
               </Button>

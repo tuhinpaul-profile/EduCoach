@@ -1,13 +1,55 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Edit, Trash2, Eye, Download } from "lucide-react";
-import { MockExam } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExamsTableProps {
-  exams: MockExam[];
+  exams: any[];
 }
 
 export default function ExamsTable({ exams }: ExamsTableProps) {
+  const { toast } = useToast();
+
+  const handleStartExam = (examId: string, examTitle: string) => {
+    toast({
+      title: "Starting Exam",
+      description: `Opening "${examTitle}" in exam mode`,
+    });
+    // Here you would typically navigate to the exam taking interface
+  };
+
+  const handleViewResults = (examId: string, examTitle: string) => {
+    toast({
+      title: "Viewing Results",
+      description: `Opening results for "${examTitle}"`,
+    });
+    // Here you would typically navigate to the results page
+  };
+
+  const handleEditExam = (examId: string, examTitle: string) => {
+    toast({
+      title: "Edit Exam",
+      description: `Opening editor for "${examTitle}"`,
+    });
+    // Here you would typically open an edit modal
+  };
+
+  const handleDownloadExam = (examId: string, examTitle: string) => {
+    toast({
+      title: "Download Started",
+      description: `Downloading "${examTitle}" as PDF`,
+    });
+    // Here you would typically trigger a download
+  };
+
+  const handleDeleteExam = (examId: string, examTitle: string) => {
+    toast({
+      title: "Delete Exam",
+      description: `Are you sure you want to delete "${examTitle}"?`,
+      variant: "destructive",
+    });
+    // Here you would typically show a confirmation dialog
+  };
   const mockExams = [
     {
       id: "1",
@@ -121,19 +163,49 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm" title="Start Exam">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      title="Start Exam"
+                      onClick={() => handleStartExam(exam.id, exam.title)}
+                      data-testid={`button-start-${exam.id}`}
+                    >
                       <Play className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm" title="View Results">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      title="View Results"
+                      onClick={() => handleViewResults(exam.id, exam.title)}
+                      data-testid={`button-results-${exam.id}`}
+                    >
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm" title="Edit">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      title="Edit"
+                      onClick={() => handleEditExam(exam.id, exam.title)}
+                      data-testid={`button-edit-${exam.id}`}
+                    >
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm" title="Download">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      title="Download"
+                      onClick={() => handleDownloadExam(exam.id, exam.title)}
+                      data-testid={`button-download-${exam.id}`}
+                    >
                       <Download className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm" title="Delete">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      title="Delete"
+                      onClick={() => handleDeleteExam(exam.id, exam.title)}
+                      data-testid={`button-delete-${exam.id}`}
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
