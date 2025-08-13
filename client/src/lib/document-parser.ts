@@ -10,43 +10,30 @@ export async function parseDocument(
   fileBuffer: ArrayBuffer, 
   options: ParseOptions
 ): Promise<InsertQuestion[]> {
-  // For now, return mock parsed questions since we can't install mammoth.js
-  // In a real implementation, this would use mammoth.js to parse the Word document
-  
-  const mockQuestions: InsertQuestion[] = [
-    {
-      subject: options.subject,
-      chapter: options.chapter,
-      topic: "Sample Topic",
-      difficulty: options.defaultDifficulty,
-      questionType: "Single Correct",
-      content: {
-        question: "This is a sample question parsed from the uploaded document.",
-        options: ["Option A", "Option B", "Option C", "Option D"],
-        correctIndex: 1
-      },
-      correctAnswer: { index: 1 },
-      explanation: "This is a sample explanation."
-    },
-    {
-      subject: options.subject,
-      chapter: options.chapter,
-      topic: "Another Topic",
-      difficulty: "Hard",
-      questionType: "Multiple Correct",
-      content: {
-        question: "This is another sample question with multiple correct answers.",
-        options: ["Statement 1", "Statement 2", "Statement 3", "Statement 4"],
-        correctIndices: [0, 2]
-      },
-      correctAnswer: { indices: [0, 2] }
+  try {
+    // Call the server-side AI parsing endpoint
+    const formData = new FormData();
+    const blob = new Blob([fileBuffer]);
+    formData.append('document', blob);
+    formData.append('subject', options.subject);
+    formData.append('chapter', options.chapter);
+    formData.append('defaultDifficulty', options.defaultDifficulty);
+
+    const response = await fetch('/api/ai/parse-document', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to parse document: ${response.statusText}`);
     }
-  ];
 
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
-  return mockQuestions;
+    const result = await response.json();
+    return result.questions;
+  } catch (error) {
+    console.error('Document parsing error:', error);
+    throw new Error('Failed to parse document with AI. Please try again.');
+  }
 }
 
 // Real implementation would look like this:

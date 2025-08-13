@@ -1,27 +1,34 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { QuestionFilter } from "@shared/schema";
+import { QuestionFilter, Question } from "@shared/schema";
 import Sidebar from "@/components/shared/sidebar";
 import StatsCards from "@/components/question-bank/stats-cards";
 import FilterPanel from "@/components/question-bank/filter-panel";
 import SubjectTree from "@/components/question-bank/subject-tree";
 import QuestionCard from "@/components/question-bank/question-card";
 import UploadModal from "@/components/question-bank/upload-modal";
+import BulkUploadModal from "@/components/question-bank/bulk-upload-modal";
 import { Button } from "@/components/ui/button";
-import { Upload, Plus } from "lucide-react";
+import { Upload, Plus, FolderUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function QuestionBank() {
   const [filters, setFilters] = useState<QuestionFilter>({});
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const { data: questions = [], isLoading } = useQuery({
+  const { data: questions = [], isLoading } = useQuery<Question[]>({
     queryKey: ["/api/questions", filters],
     enabled: true,
   });
 
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<{
+    totalQuestions: number;
+    totalSubjects: number;
+    totalMockExams: number;
+    recentUploads: number;
+  }>({
     queryKey: ["/api/questions/stats"],
   });
 
@@ -63,13 +70,24 @@ export default function QuestionBank() {
               <Button 
                 onClick={() => setIsUploadModalOpen(true)}
                 className="bg-primary text-white hover:bg-blue-600"
+                data-testid="button-upload-single"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Upload Document
               </Button>
               <Button 
+                onClick={() => setIsBulkUploadModalOpen(true)}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+                data-testid="button-upload-bulk"
+              >
+                <FolderUp className="w-4 h-4 mr-2" />
+                Bulk Upload
+              </Button>
+              <Button 
                 onClick={handleCreateMockExam}
                 className="bg-secondary text-white hover:bg-green-600"
+                data-testid="button-create-mock"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Mock Exam
@@ -124,6 +142,11 @@ export default function QuestionBank() {
       <UploadModal 
         isOpen={isUploadModalOpen} 
         onClose={() => setIsUploadModalOpen(false)} 
+      />
+      
+      <BulkUploadModal 
+        isOpen={isBulkUploadModalOpen} 
+        onClose={() => setIsBulkUploadModalOpen(false)} 
       />
     </div>
   );

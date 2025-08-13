@@ -66,9 +66,15 @@ Preferred communication style: Simple, everyday language.
 - **TypeScript**: Type safety across frontend and backend
 - **React Query**: Server state management with caching and synchronization
 
+## AI Integration
+- **OpenAI API**: GPT-4o model for intelligent document parsing and question extraction
+- **Smart Document Processing**: AI-powered text extraction from Word, PDF, and text files
+- **Bulk Upload Support**: Process multiple documents simultaneously with AI parsing
+
 ## File Processing
 - **Multer**: Express middleware for handling multipart/form-data uploads
-- **Document Parser**: Placeholder for mammoth.js or similar Word document processing
+- **AI Document Parser**: OpenAI-powered document parsing with support for multiple formats
+- **File Type Support**: Word documents (.doc/.docx), PDFs, and text files
 
 ## Styling & Design System
 - **CSS Variables**: Custom design tokens for theming consistency
@@ -78,3 +84,23 @@ Preferred communication style: Simple, everyday language.
 ## Session Management
 - **Express Session**: Server-side session handling
 - **Connect PG Simple**: PostgreSQL session store integration
+
+# Recent Updates (January 2025)
+
+## AI-Powered Document Parsing Implementation
+- Integrated OpenAI GPT-4o for intelligent question extraction from documents
+- Added support for multiple file formats: Word documents, PDFs, and text files
+- Implemented bulk upload functionality for processing multiple documents simultaneously
+- Enhanced question classification and content structure recognition
+
+## Enhanced Upload Features
+- Single document upload with AI parsing at `/api/ai/parse-document`
+- Bulk document upload processing at `/api/ai/bulk-upload`
+- Improved file validation and error handling
+- Real-time upload progress tracking and status reporting
+
+## User Interface Improvements
+- Added bulk upload modal with drag-and-drop support
+- Enhanced upload interface with better file type support
+- Improved navigation and fixed broken links
+- Added proper TypeScript typing throughout the application

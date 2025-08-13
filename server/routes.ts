@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertQuestionSchema, questionFilterSchema } from "@shared/schema";
 import multer from "multer";
-import { parseDocument } from "../client/src/lib/document-parser";
+import { parseDocumentWithAI, extractTextFromBuffer, bulkParseDocuments } from "./ai-parser";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -31,7 +31,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Upload and parse document (moved before generic question routes)
+  // AI-powered document parsing
+  app.post("/api/ai/parse-document", upload.single('document'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const { subject, chapter, defaultDifficulty } = req.body;
+      
+      if (!subject || !chapter) {
+        return res.status(400).json({ message: "Subject and chapter are required" });
+      }
+
+      // Extract text from the uploaded file
+      const documentText = await extractTextFromBuffer(req.file.buffer, req.file.originalname || 'document');
+      
+      // Parse with AI
+      const questions = await parseDocumentWithAI(documentText, {
+        subject,
+        chapter,
+        defaultDifficulty: defaultDifficulty || "Medium"
+      });
+
+      res.json({
+        message: `Successfully parsed ${questions.length} questions`,
+        questions
+      });
+    } catch (error) {
+      console.error("AI document parsing error:", error);
+      res.status(500).json({ message: "Failed to parse document with AI: " + (error as Error).message });
+    }
+  });
+
+  // Bulk upload and parse multiple documents
+  app.post("/api/ai/bulk-upload", upload.array('documents', 10), async (req, res) => {
+    try {
+      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        return res.status(400).json({ message: "No files uploaded" });
+      }
+
+      const { subject, chapter, defaultDifficulty } = req.body;
+      
+      if (!subject || !chapter) {
+        return res.status(400).json({ message: "Subject and chapter are required" });
+      }
+
+      const files = req.files.map(file => ({
+        buffer: file.buffer,
+        filename: file.originalname || 'unknown'
+      }));
+
+      const results = await bulkParseDocuments(files, {
+        subject,
+        chapter,
+        defaultDifficulty: defaultDifficulty || "Medium"
+      });
+
+      // Store all successfully parsed questions
+      let totalQuestions = 0;
+      const allCreatedQuestions = [];
+      
+      for (const result of results) {
+        if (result.questions.length > 0) {
+          for (const questionData of result.questions) {
+            try {
+              const question = await storage.createQuestion(questionData);
+              allCreatedQuestions.push(question);
+              totalQuestions++;
+            } catch (error) {
+              console.error(`Error storing question from ${result.filename}:`, error);
+            }
+          }
+        }
+      }
+
+      res.json({
+        message: `Bulk upload completed: ${totalQuestions} questions stored from ${req.files.length} files`,
+        results: results.map(r => ({
+          filename: r.filename,
+          questionsCount: r.questions.length,
+          error: r.error
+        })),
+        totalQuestionsStored: totalQuestions
+      });
+    } catch (error) {
+      console.error("Bulk upload error:", error);
+      res.status(500).json({ message: "Failed to process bulk upload: " + (error as Error).message });
+    }
+  });
+
+  // Upload and parse document (legacy endpoint for backward compatibility)
   app.post("/api/questions/upload", upload.single('document'), async (req, res) => {
     try {
       if (!req.file) {
@@ -44,8 +134,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Subject and chapter are required" });
       }
 
-      // Parse the document
-      const questions = await parseDocument(req.file.buffer.buffer, {
+      // Extract text and parse with AI
+      const documentText = await extractTextFromBuffer(req.file.buffer, req.file.originalname || 'document');
+      const questions = await parseDocumentWithAI(documentText, {
         subject,
         chapter,
         defaultDifficulty: defaultDifficulty || "Medium"
@@ -64,7 +155,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Document upload error:", error);
-      res.status(500).json({ message: "Failed to process document" });
+      res.status(500).json({ message: "Failed to process document: " + (error as Error).message });
     }
   });
 
@@ -150,7 +241,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Students API
   app.get("/api/students", async (req, res) => {
     try {
-      const students = []; // Will be replaced with actual storage
+      const students: any[] = []; // Will be replaced with actual storage
       res.json(students);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -168,7 +259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Batches API
   app.get("/api/batches", async (req, res) => {
     try {
-      const batches = [];
+      const batches: any[] = [];
       res.json(batches);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -178,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Attendance API
   app.get("/api/attendance", async (req, res) => {
     try {
-      const attendance = [];
+      const attendance: any[] = [];
       res.json(attendance);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -197,7 +288,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Fees API
   app.get("/api/fees", async (req, res) => {
     try {
-      const fees = [];
+      const fees: any[] = [];
       res.json(fees);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
@@ -229,7 +320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Mock Exams API
   app.get("/api/mock-exams", async (req, res) => {
     try {
-      const exams = [];
+      const exams: any[] = [];
       res.json(exams);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

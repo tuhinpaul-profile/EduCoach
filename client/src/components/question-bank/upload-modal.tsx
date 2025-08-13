@@ -27,9 +27,26 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const storeQuestionsMutation = useMutation({
+    mutationFn: async (questions: any[]) => {
+      const results = [];
+      for (const question of questions) {
+        const response = await apiRequest("POST", "/api/questions", question);
+        const result = await response.json();
+        results.push(result);
+      }
+      return results;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/questions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/questions/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/questions/subject-tree"] });
+    },
+  });
+
   const uploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await apiRequest("POST", "/api/questions/upload", formData);
+      const response = await apiRequest("POST", "/api/ai/parse-document", formData);
       return response.json();
     },
     onSuccess: (data) => {
@@ -37,6 +54,12 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
         title: "Upload Successful",
         description: data.message,
       });
+      
+      // Store the parsed questions
+      if (data.questions && data.questions.length > 0) {
+        storeQuestionsMutation.mutate(data.questions);
+      }
+      
       queryClient.invalidateQueries({ queryKey: ["/api/questions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/questions/stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/questions/subject-tree"] });
@@ -61,11 +84,17 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
   };
 
   const handleFileSelect = (selectedFile: File) => {
-    if (selectedFile.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
-        selectedFile.type !== "application/msword") {
+    const allowedTypes = [
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+      "text/plain",
+      "application/pdf"
+    ];
+    
+    if (!allowedTypes.includes(selectedFile.type)) {
       toast({
         title: "Invalid File Type",
-        description: "Please select a Word document (.doc or .docx)",
+        description: "Please select a Word document (.doc/.docx), PDF, or text file",
         variant: "destructive",
       });
       return;
@@ -159,14 +188,14 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
                   Drag and drop your document here
                 </h4>
                 <p className="text-neutral-600 mb-4">or click to browse files</p>
-                <p className="text-sm text-neutral-500">Supports .docx, .doc files up to 10MB</p>
+                <p className="text-sm text-neutral-500">Supports .docx, .doc, .txt, .pdf files up to 10MB</p>
               </div>
             )}
             <input
               id="file-input"
               type="file"
               className="hidden"
-              accept=".doc,.docx"
+              accept=".doc,.docx,.txt,.pdf"
               onChange={(e) => {
                 const selectedFile = e.target.files?.[0];
                 if (selectedFile) {
