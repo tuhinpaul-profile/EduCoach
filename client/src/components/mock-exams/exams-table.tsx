@@ -7,6 +7,7 @@ import ExamPlayerModal from "./exam-player-modal";
 import ExamResultsModal from "./exam-results-modal";
 import EditExamModal from "./edit-exam-modal";
 import DeleteExamModal from "./delete-exam-modal";
+import ExamQuickPreview from "./exam-quick-preview";
 
 interface ExamsTableProps {
   exams: any[];
@@ -36,11 +37,37 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
   };
 
   const handleDownloadExam = (examId: string, examTitle: string) => {
-    toast({
-      title: "Download Started",
-      description: `Downloading "${examTitle}" as PDF`,
+    const mockExamData = {
+      title: examTitle,
+      subject: "Physics", 
+      duration: 180,
+      totalMarks: 300,
+      questions: [
+        {
+          content: { question: "What is the acceleration due to gravity on Earth?" },
+          options: ["9.8 m/s²", "10 m/s²", "9.5 m/s²", "8.9 m/s²"]
+        },
+        {
+          content: { question: "Which of the following are scalar quantities?" },
+          options: ["Speed", "Distance", "Mass", "Time"]
+        }
+      ],
+      instructions: [
+        "Read each question carefully",
+        "Mark your answers clearly", 
+        "Manage your time effectively",
+        "Review your answers before submitting"
+      ]
+    };
+
+    import('@/lib/export-utils').then(({ generateExamPDF }) => {
+      generateExamPDF(mockExamData);
+      
+      toast({
+        title: "Download Started",
+        description: `Generating PDF for "${examTitle}"`,
+      });
     });
-    // Here you would typically trigger a download
   };
 
   const handleDeleteExam = (exam: any) => {
@@ -115,7 +142,16 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                 <td className="px-6 py-4">
                   <div>
                     <div className="text-sm font-medium text-neutral-900 mb-1">
-                      {exam.title}
+                      <ExamQuickPreview
+                        exam={exam}
+                        onStartExam={handleStartExam}
+                        onViewResults={handleViewResults}
+                        trigger={
+                          <span className="cursor-pointer hover:text-blue-600 transition-colors">
+                            {exam.title}
+                          </span>
+                        }
+                      />
                     </div>
                     {exam.description && (
                       <div className="text-sm text-neutral-500 max-w-md">

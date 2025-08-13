@@ -4,20 +4,41 @@ import Sidebar from "@/components/shared/sidebar";
 import ExamFilters from "@/components/mock-exams/exam-filters";
 import ExamsTable from "@/components/mock-exams/exams-table";
 import CreateExamModal from "@/components/mock-exams/create-exam-modal";
+import ExamRecommendations from "@/components/mock-exams/exam-recommendations";
 import { Button } from "@/components/ui/button";
-import { Plus, Download, PlayCircle } from "lucide-react";
+import { Plus, Download, PlayCircle, Brain, List } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function MockExams() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'exams' | 'recommendations'>('exams');
   const { toast } = useToast();
 
   const handleExportResults = () => {
-    toast({
-      title: "Export Started",
-      description: "Downloading exam results as Excel file...",
+    const mockResultsData = {
+      examTitle: "All Mock Exams Results",
+      attempts: [
+        { student: "John Doe", score: 85, timeTaken: "45 min", date: "2024-01-20" },
+        { student: "Jane Smith", score: 92, timeTaken: "38 min", date: "2024-01-20" },
+        { student: "Mike Johnson", score: 78, timeTaken: "52 min", date: "2024-01-19" }
+      ],
+      stats: {
+        totalAttempts: 25,
+        averageScore: 72.5,
+        passRate: 80,
+        completionRate: 90
+      }
+    };
+
+    import('@/lib/export-utils').then(({ generateResultsCSV, downloadCSV }) => {
+      const csvContent = generateResultsCSV(mockResultsData);
+      downloadCSV(csvContent, `exam-results-${new Date().toISOString().split('T')[0]}.csv`);
+      
+      toast({
+        title: "Export Complete",
+        description: "Results have been downloaded as CSV file",
+      });
     });
-    // Here you would typically trigger a file download
   };
 
   const { data: exams = [], isLoading } = useQuery<any[]>({
@@ -71,6 +92,28 @@ export default function MockExams() {
                   <span className="text-blue-700 font-medium">{examStats.avgScore}% Avg Score</span>
                 </div>
               </div>
+              
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant={activeTab === 'exams' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setActiveTab('exams')}
+                  data-testid="tab-exams"
+                >
+                  <List className="w-4 h-4 mr-2" />
+                  All Exams
+                </Button>
+                <Button
+                  variant={activeTab === 'recommendations' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setActiveTab('recommendations')}
+                  data-testid="tab-recommendations"
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  Recommended
+                </Button>
+              </div>
+              
               <Button variant="outline" onClick={handleExportResults} data-testid="button-export">
                 <Download className="w-4 h-4 mr-2" />
                 Export Results
@@ -103,8 +146,22 @@ export default function MockExams() {
             </div>
           </div>
 
-          <ExamFilters />
-          <ExamsTable exams={exams} />
+          {activeTab === 'exams' ? (
+            <>
+              <ExamFilters />
+              <ExamsTable exams={exams} />
+            </>
+          ) : (
+            <ExamRecommendations 
+              availableExams={exams} 
+              onStartExam={(examId) => {
+                toast({
+                  title: "Exam Started",
+                  description: "Opening recommended exam...",
+                });
+              }} 
+            />
+          )}
         </main>
       </div>
       

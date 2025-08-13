@@ -7,6 +7,7 @@ import RecentActivity from "@/components/dashboard/recent-activity";
 import IntegrationStatus from "@/components/dashboard/integration-status";
 import AttendanceChart from "@/components/dashboard/attendance-chart";
 import FeeOverview from "@/components/dashboard/fee-overview";
+import AchievementsPanel from "@/components/dashboard/achievements-panel";
 
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery({
@@ -67,6 +68,10 @@ export default function Dashboard() {
           </div>
           
           <RecentActivity />
+          
+          <div className="mt-8">
+            <AchievementsPanel />
+          </div>
         </main>
       </div>
     </div>

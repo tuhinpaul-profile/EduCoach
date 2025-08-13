@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,6 +85,9 @@ export default function CreateExamModal({ isOpen, onClose }: CreateExamModalProp
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create Mock Exam</DialogTitle>
+          <DialogDescription>
+            Create a new mock exam by selecting questions from your question bank. Fill in the details below to set up the exam configuration.
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6">

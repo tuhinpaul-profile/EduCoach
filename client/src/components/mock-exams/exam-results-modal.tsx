@@ -1,8 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Clock, Users, Target, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExamResultsModalProps {
   isOpen: boolean;
@@ -11,6 +12,8 @@ interface ExamResultsModalProps {
 }
 
 export default function ExamResultsModal({ isOpen, onClose, exam }: ExamResultsModalProps) {
+  const { toast } = useToast();
+  
   if (!exam) return null;
 
   // Mock results data
@@ -36,6 +39,62 @@ export default function ExamResultsModal({ isOpen, onClose, exam }: ExamResultsM
     return "text-red-600";
   };
 
+  const handleExportResults = () => {
+    const resultsData = {
+      examTitle: exam.title,
+      attempts: results.recentAttempts.map(attempt => ({
+        student: attempt.student,
+        score: attempt.score,
+        timeTaken: attempt.time,
+        date: attempt.date
+      })),
+      stats: {
+        totalAttempts: results.totalAttempts,
+        averageScore: results.averageScore,
+        passRate: results.passRate,
+        completionRate: results.completionRate
+      }
+    };
+
+    import('@/lib/export-utils').then(({ generateResultsCSV, downloadCSV, generateDetailedAnalytics }) => {
+      const csvContent = generateResultsCSV(resultsData);
+      downloadCSV(csvContent, `${exam.title.replace(/[^a-zA-Z0-9]/g, '-')}-results.csv`);
+      
+      toast({
+        title: "Export Complete",
+        description: "Detailed results have been downloaded as CSV",
+      });
+    });
+  };
+
+  const handleDownloadReport = () => {
+    const resultsData = {
+      examTitle: exam.title,
+      attempts: results.recentAttempts.map(attempt => ({
+        student: attempt.student,
+        score: attempt.score,
+        timeTaken: attempt.time,
+        date: attempt.date
+      })),
+      stats: {
+        totalAttempts: results.totalAttempts,
+        averageScore: results.averageScore,
+        passRate: results.passRate,
+        completionRate: results.completionRate
+      }
+    };
+
+    import('@/lib/export-utils').then(({ generateDetailedAnalytics, downloadCSV }) => {
+      const analyticsContent = generateDetailedAnalytics(resultsData);
+      downloadCSV(analyticsContent, `${exam.title.replace(/[^a-zA-Z0-9]/g, '-')}-analytics-report.txt`);
+      
+      toast({
+        title: "Report Downloaded",
+        description: "Detailed analytics report has been generated",
+      });
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
@@ -44,6 +103,9 @@ export default function ExamResultsModal({ isOpen, onClose, exam }: ExamResultsM
             <Target className="w-5 h-5" />
             <span>Exam Results: {exam.title}</span>
           </DialogTitle>
+          <DialogDescription>
+            View comprehensive analytics, student performance metrics, and export detailed reports for this exam.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -114,7 +176,12 @@ export default function ExamResultsModal({ isOpen, onClose, exam }: ExamResultsM
           <div className="bg-white border rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Recent Attempts</h3>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => handleExportResults()}
+                data-testid="button-export-attempts"
+              >
                 <Download className="w-4 h-4 mr-2" />
                 Export All
               </Button>
@@ -165,11 +232,15 @@ export default function ExamResultsModal({ isOpen, onClose, exam }: ExamResultsM
             <Button variant="outline" onClick={onClose}>
               Close
             </Button>
-            <Button variant="outline">
+            <Button 
+              variant="outline"
+              onClick={handleDownloadReport}
+              data-testid="button-download-report"
+            >
               <Download className="w-4 h-4 mr-2" />
               Download Report
             </Button>
-            <Button>
+            <Button onClick={handleExportResults} data-testid="button-detailed-analytics">
               View Detailed Analytics
             </Button>
           </div>

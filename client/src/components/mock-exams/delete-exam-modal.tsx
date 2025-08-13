@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, AlertTriangle } from "lucide-react";
@@ -52,6 +52,9 @@ export default function DeleteExamModal({ isOpen, onClose, exam }: DeleteExamMod
             <Trash2 className="w-5 h-5" />
             <span>Delete Mock Exam</span>
           </DialogTitle>
+          <DialogDescription>
+            Permanently remove this exam and all associated data. This action cannot be undone.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

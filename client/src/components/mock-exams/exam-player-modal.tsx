@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -144,6 +144,14 @@ export default function ExamPlayerModal({ isOpen, onClose, exam }: ExamPlayerMod
               </div>
             )}
           </DialogTitle>
+          <DialogDescription>
+            {!isStarted 
+              ? "Review the instructions and start your exam when ready. Make sure you have a stable internet connection."
+              : isSubmitted 
+              ? "Your exam has been completed and submitted successfully."
+              : "Answer each question carefully and manage your time effectively. You can navigate between questions freely."
+            }
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
