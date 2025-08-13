@@ -36,6 +36,7 @@ export default function BulkUploadModal({ isOpen, onClose }: BulkUploadModalProp
 
   const bulkUploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
+      console.log("Bulk uploading formData:", formData);
       const response = await apiRequest("POST", "/api/ai/bulk-upload", formData);
       return response.json();
     },

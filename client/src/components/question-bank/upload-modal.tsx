@@ -46,6 +46,7 @@ export default function UploadModal({ isOpen, onClose }: UploadModalProps) {
 
   const uploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
+      console.log("Uploading formData:", formData);
       const response = await apiRequest("POST", "/api/ai/parse-document", formData);
       return response.json();
     },

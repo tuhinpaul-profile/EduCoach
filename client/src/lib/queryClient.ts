@@ -12,10 +12,21 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  let headers: HeadersInit = {};
+  let body: string | FormData | undefined = undefined;
+
+  if (data instanceof FormData) {
+    // For FormData, don't set Content-Type header - let browser set it with boundary
+    body = data;
+  } else if (data) {
+    headers["Content-Type"] = "application/json";
+    body = JSON.stringify(data);
+  }
+
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
+    headers,
+    body,
     credentials: "include",
   });
 
@@ -29,7 +40,25 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+    let url = queryKey[0] as string;
+    
+    // Handle query parameters properly
+    if (queryKey.length > 1 && queryKey[1] && typeof queryKey[1] === 'object') {
+      const params = new URLSearchParams();
+      const filters = queryKey[1] as Record<string, any>;
+      
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, String(value));
+        }
+      });
+      
+      if (params.toString()) {
+        url += '?' + params.toString();
+      }
+    }
+    
+    const res = await fetch(url, {
       credentials: "include",
     });
 

@@ -1,0 +1,15 @@
+1. What is the acceleration due to gravity on Earth?
+a) 9.8 m/s²
+b) 10 m/s²
+c) 9.5 m/s²
+d) 8.9 m/s²
+
+Answer: a) 9.8 m/s²
+
+2. Which of the following is a scalar quantity?
+a) Velocity
+b) Displacement
+c) Force
+d) Speed
+
+Answer: d) Speed

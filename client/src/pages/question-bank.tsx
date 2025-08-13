@@ -8,6 +8,7 @@ import SubjectTree from "@/components/question-bank/subject-tree";
 import QuestionCard from "@/components/question-bank/question-card";
 import UploadModal from "@/components/question-bank/upload-modal";
 import BulkUploadModal from "@/components/question-bank/bulk-upload-modal";
+import MockExamModal from "@/components/question-bank/mock-exam-modal";
 import { Button } from "@/components/ui/button";
 import { Upload, Plus, FolderUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +17,7 @@ export default function QuestionBank() {
   const [filters, setFilters] = useState<QuestionFilter>({});
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
+  const [isMockExamModalOpen, setIsMockExamModalOpen] = useState(false);
   const { toast } = useToast();
 
   const { data: questions = [], isLoading } = useQuery<Question[]>({
@@ -37,10 +39,7 @@ export default function QuestionBank() {
   };
 
   const handleCreateMockExam = () => {
-    toast({
-      title: "Mock Exam Creation",
-      description: "Mock exam creation feature coming soon!",
-    });
+    setIsMockExamModalOpen(true);
   };
 
   if (isLoading) {
@@ -147,6 +146,11 @@ export default function QuestionBank() {
       <BulkUploadModal 
         isOpen={isBulkUploadModalOpen} 
         onClose={() => setIsBulkUploadModalOpen(false)} 
+      />
+      
+      <MockExamModal 
+        isOpen={isMockExamModalOpen} 
+        onClose={() => setIsMockExamModalOpen(false)} 
       />
     </div>
   );
