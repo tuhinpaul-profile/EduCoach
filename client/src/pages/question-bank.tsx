@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { QuestionFilter } from "@shared/schema";
-import Sidebar from "@/components/question-bank/sidebar";
+import Sidebar from "@/components/shared/sidebar";
 import StatsCards from "@/components/question-bank/stats-cards";
 import FilterPanel from "@/components/question-bank/filter-panel";
 import SubjectTree from "@/components/question-bank/subject-tree";
