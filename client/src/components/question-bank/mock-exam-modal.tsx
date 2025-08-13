@@ -24,7 +24,7 @@ export default function MockExamModal({ isOpen, onClose }: MockExamModalProps) {
   const [duration, setDuration] = useState("60");
   const [totalMarks, setTotalMarks] = useState("100");
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
-  const [filterSubject, setFilterSubject] = useState("");
+  const [filterSubject, setFilterSubject] = useState("all");
   const [filterChapter, setFilterChapter] = useState("");
 
   const { toast } = useToast();
@@ -32,7 +32,10 @@ export default function MockExamModal({ isOpen, onClose }: MockExamModalProps) {
 
   // Get available questions for selection
   const { data: questions = [] } = useQuery<Question[]>({
-    queryKey: ["/api/questions", { subject: filterSubject, chapter: filterChapter }],
+    queryKey: ["/api/questions", { 
+      subject: filterSubject === "all" ? "" : filterSubject, 
+      chapter: filterChapter 
+    }],
     enabled: isOpen,
   });
 
@@ -66,7 +69,7 @@ export default function MockExamModal({ isOpen, onClose }: MockExamModalProps) {
     setDuration("60");
     setTotalMarks("100");
     setSelectedQuestions([]);
-    setFilterSubject("");
+    setFilterSubject("all");
     setFilterChapter("");
     onClose();
   };
@@ -216,7 +219,7 @@ export default function MockExamModal({ isOpen, onClose }: MockExamModalProps) {
                     <SelectValue placeholder="All subjects" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All subjects</SelectItem>
+                    <SelectItem value="all">All subjects</SelectItem>
                     {subjects.map((sub) => (
                       <SelectItem key={sub} value={sub}>{sub}</SelectItem>
                     ))}
