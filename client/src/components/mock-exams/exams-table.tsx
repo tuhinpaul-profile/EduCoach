@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Edit, Trash2, Eye, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ExamPlayerModal from "./exam-player-modal";
+import ExamResultsModal from "./exam-results-modal";
+import EditExamModal from "./edit-exam-modal";
+import DeleteExamModal from "./delete-exam-modal";
 
 interface ExamsTableProps {
   exams: any[];
@@ -9,29 +14,25 @@ interface ExamsTableProps {
 
 export default function ExamsTable({ exams }: ExamsTableProps) {
   const { toast } = useToast();
+  const [selectedExam, setSelectedExam] = useState<any>(null);
+  const [isPlayerModalOpen, setIsPlayerModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleStartExam = (examId: string, examTitle: string) => {
-    toast({
-      title: "Starting Exam",
-      description: `Opening "${examTitle}" in exam mode`,
-    });
-    // Here you would typically navigate to the exam taking interface
+  const handleStartExam = (exam: any) => {
+    setSelectedExam(exam);
+    setIsPlayerModalOpen(true);
   };
 
-  const handleViewResults = (examId: string, examTitle: string) => {
-    toast({
-      title: "Viewing Results",
-      description: `Opening results for "${examTitle}"`,
-    });
-    // Here you would typically navigate to the results page
+  const handleViewResults = (exam: any) => {
+    setSelectedExam(exam);
+    setIsResultsModalOpen(true);
   };
 
-  const handleEditExam = (examId: string, examTitle: string) => {
-    toast({
-      title: "Edit Exam",
-      description: `Opening editor for "${examTitle}"`,
-    });
-    // Here you would typically open an edit modal
+  const handleEditExam = (exam: any) => {
+    setSelectedExam(exam);
+    setIsEditModalOpen(true);
   };
 
   const handleDownloadExam = (examId: string, examTitle: string) => {
@@ -42,13 +43,9 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
     // Here you would typically trigger a download
   };
 
-  const handleDeleteExam = (examId: string, examTitle: string) => {
-    toast({
-      title: "Delete Exam",
-      description: `Are you sure you want to delete "${examTitle}"?`,
-      variant: "destructive",
-    });
-    // Here you would typically show a confirmation dialog
+  const handleDeleteExam = (exam: any) => {
+    setSelectedExam(exam);
+    setIsDeleteModalOpen(true);
   };
   const mockExams = [
     {
@@ -167,7 +164,7 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                       variant="ghost" 
                       size="sm" 
                       title="Start Exam"
-                      onClick={() => handleStartExam(exam.id, exam.title)}
+                      onClick={() => handleStartExam(exam)}
                       data-testid={`button-start-${exam.id}`}
                     >
                       <Play className="w-4 h-4" />
@@ -176,7 +173,7 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                       variant="ghost" 
                       size="sm" 
                       title="View Results"
-                      onClick={() => handleViewResults(exam.id, exam.title)}
+                      onClick={() => handleViewResults(exam)}
                       data-testid={`button-results-${exam.id}`}
                     >
                       <Eye className="w-4 h-4" />
@@ -185,7 +182,7 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                       variant="ghost" 
                       size="sm" 
                       title="Edit"
-                      onClick={() => handleEditExam(exam.id, exam.title)}
+                      onClick={() => handleEditExam(exam)}
                       data-testid={`button-edit-${exam.id}`}
                     >
                       <Edit className="w-4 h-4" />
@@ -203,7 +200,7 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
                       variant="ghost" 
                       size="sm" 
                       title="Delete"
-                      onClick={() => handleDeleteExam(exam.id, exam.title)}
+                      onClick={() => handleDeleteExam(exam)}
                       data-testid={`button-delete-${exam.id}`}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -215,6 +212,31 @@ export default function ExamsTable({ exams }: ExamsTableProps) {
           </tbody>
         </table>
       </div>
+
+      {/* Modals */}
+      <ExamPlayerModal 
+        isOpen={isPlayerModalOpen} 
+        onClose={() => setIsPlayerModalOpen(false)} 
+        exam={selectedExam} 
+      />
+      
+      <ExamResultsModal 
+        isOpen={isResultsModalOpen} 
+        onClose={() => setIsResultsModalOpen(false)} 
+        exam={selectedExam} 
+      />
+      
+      <EditExamModal 
+        isOpen={isEditModalOpen} 
+        onClose={() => setIsEditModalOpen(false)} 
+        exam={selectedExam} 
+      />
+      
+      <DeleteExamModal 
+        isOpen={isDeleteModalOpen} 
+        onClose={() => setIsDeleteModalOpen(false)} 
+        exam={selectedExam} 
+      />
     </div>
   );
 }
