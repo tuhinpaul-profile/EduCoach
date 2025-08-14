@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { 
   Users, 
   MessageSquare, 
@@ -25,6 +26,7 @@ import {
   LogOut
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+// Import the logo using the correct path
 
 interface DashboardStats {
   totalStudents: number;
@@ -139,17 +141,25 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
-              <Badge variant="secondary">{user.role}</Badge>
+              <div className="w-8 h-8 bg-gradient-to-r from-red-600 to-gray-800 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-xs">ZK</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-gray-800 dark:from-red-500 dark:to-gray-200 bg-clip-text text-transparent">
+                  ZeroKelvin
+                </h1>
+                <Badge variant="secondary">{user.role}</Badge>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {user.name}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Welcome, {user.name}</span>
+              <ThemeToggle />
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout

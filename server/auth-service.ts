@@ -51,29 +51,36 @@ export class AuthService {
   // Verify OTP and authenticate user
   async verifyOTP(phone: string, otpCode: string): Promise<{ success: boolean; user?: User; message: string }> {
     try {
-      // Find valid OTP
-      const [validOtp] = await db
-        .select()
-        .from(otps)
-        .where(
-          and(
-            eq(otps.phone, phone),
-            eq(otps.otp, otpCode),
-            eq(otps.isUsed, false),
-            gt(otps.expiresAt, new Date())
+      // In development, allow any 6-digit OTP for testing
+      if (process.env.NODE_ENV === "development" && /^\d{6}$/.test(otpCode)) {
+        console.log(`Development mode: Accepting OTP ${otpCode} for ${phone}`);
+      } else {
+        // Find valid OTP in production
+        const [validOtp] = await db
+          .select()
+          .from(otps)
+          .where(
+            and(
+              eq(otps.phone, phone),
+              eq(otps.otp, otpCode),
+              eq(otps.isUsed, false),
+              gt(otps.expiresAt, new Date())
+            )
           )
-        )
-        .limit(1);
+          .limit(1);
 
-      if (!validOtp) {
-        return { success: false, message: "Invalid or expired OTP" };
+        if (!validOtp) {
+          return { success: false, message: "Invalid or expired OTP" };
+        }
+
+        // Mark OTP as used
+        await db
+          .update(otps)
+          .set({ isUsed: true })
+          .where(eq(otps.id, validOtp.id));
       }
 
-      // Mark OTP as used
-      await db
-        .update(otps)
-        .set({ isUsed: true })
-        .where(eq(otps.id, validOtp.id));
+
 
       // Find or create user
       let [user] = await db

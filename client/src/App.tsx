@@ -15,20 +15,21 @@ import AdminDashboard from "@/pages/admin-dashboard";
 import NotFound from "@/pages/not-found";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
+import { ThemeProvider } from "@/components/theme-provider";
 
 function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={Dashboard} />
-      <ProtectedRoute path="/dashboard" component={Dashboard} />
+      <ProtectedRoute path="/" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/admin" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
-      <ProtectedRoute path="/question-bank" component={QuestionBank} allowedRoles={["admin", "teacher", "coordinator"]} />
-      <ProtectedRoute path="/students" component={Students} allowedRoles={["admin", "teacher", "coordinator"]} />
-      <ProtectedRoute path="/attendance" component={Attendance} allowedRoles={["admin", "teacher", "coordinator"]} />
+      <ProtectedRoute path="/dashboard" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/question-bank" component={QuestionBank} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/students" component={Students} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/attendance" component={Attendance} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/fees" component={Fees} allowedRoles={["admin", "coordinator"]} />
-      <ProtectedRoute path="/mock-exams" component={MockExams} allowedRoles={["admin", "teacher", "coordinator"]} />
-      <ProtectedRoute path="/settings" component={Settings} />
+      <ProtectedRoute path="/mock-exams" component={MockExams} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/settings" component={Settings} allowedRoles={["admin", "coordinator"]} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -36,14 +37,16 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="zerokelvin-theme">
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

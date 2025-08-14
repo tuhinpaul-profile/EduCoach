@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Phone, Shield, Users, GraduationCap, Heart, Settings } from "lucide-react";
 import { userRoles } from "@shared/schema";
+import { ThemeToggle } from "@/components/theme-toggle";
+// Import the logo using the correct path
 
 const roleConfig = {
   admin: {
@@ -87,15 +89,28 @@ export default function AuthPage() {
   const selectedRoleConfig = role ? roleConfig[role as keyof typeof roleConfig] : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         {/* Hero Section */}
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              EduManage Pro
-            </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-600 to-gray-800 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-2xl">ZK</span>
+              </div>
+              <div>
+                <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-red-600 to-gray-800 dark:from-red-500 dark:to-gray-200 bg-clip-text text-transparent">
+                  ZeroKelvin
+                </h1>
+                <p className="text-lg font-medium text-gray-700 dark:text-gray-300">Educational Management System</p>
+              </div>
+            </div>
+            <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
               Comprehensive educational management platform for students, teachers, parents, and administrators
             </p>
           </div>
