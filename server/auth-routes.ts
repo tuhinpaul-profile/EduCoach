@@ -262,5 +262,27 @@ export function setupAuthRoutes(app: Express) {
       res.status(500).json({ error: "Internal server error" });
     }
   });
+
+  // Mark message as read
+  app.post("/api/notifications/:id/mark-read", async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      if (!userId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { id } = req.params;
+      const result = await notificationService.markAsRead(id, userId);
+      
+      if (result.success) {
+        res.status(200).json({ message: result.message });
+      } else {
+        res.status(400).json({ error: result.message });
+      }
+    } catch (error) {
+      console.error("Mark as read error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
 }
 

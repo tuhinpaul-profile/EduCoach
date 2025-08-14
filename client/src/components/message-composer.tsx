@@ -69,8 +69,42 @@ export function MessageComposer({ onMessageSent }: MessageComposerProps) {
       selectedRole?: string;
       selectedUsers?: string[];
     }) => {
+      let requestBody;
+      
+      if (messageData.recipientType === "all") {
+        // Send broadcast to all users
+        const allUserIds = allUsers.map(user => user.id);
+        requestBody = {
+          title: messageData.title,
+          content: messageData.content,
+          type: "broadcast",
+          recipients: allUserIds,
+        };
+      } else if (messageData.recipientType === "role" && messageData.selectedRole) {
+        // Send broadcast to specific role
+        const roleUserIds = allUsers
+          .filter(user => user.role === messageData.selectedRole)
+          .map(user => user.id);
+        requestBody = {
+          title: messageData.title,
+          content: messageData.content,
+          type: "broadcast",
+          recipients: roleUserIds,
+        };
+      } else if (messageData.recipientType === "individual" && messageData.selectedUsers) {
+        // Send broadcast to selected users
+        requestBody = {
+          title: messageData.title,
+          content: messageData.content,
+          type: "broadcast",
+          recipients: messageData.selectedUsers,
+        };
+      } else {
+        throw new Error("Invalid message configuration");
+      }
+      
       const res = await apiRequest("POST", "/api/notifications/send", {
-        body: JSON.stringify(messageData),
+        body: JSON.stringify(requestBody),
         headers: { "Content-Type": "application/json" },
       });
       return res.json();
@@ -153,8 +187,8 @@ export function MessageComposer({ onMessageSent }: MessageComposerProps) {
       title,
       content,
       recipientType,
-      selectedRole: recipientType === "role" ? selectedRole : undefined,
-      selectedUsers: recipientType === "individual" ? selectedUsers : undefined,
+      selectedRole,
+      selectedUsers,
     });
   };
 

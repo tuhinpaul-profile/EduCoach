@@ -56,9 +56,9 @@ export class NotificationService {
   }
 
   // Get inbox messages for a user
-  async getInbox(userId: string): Promise<Notification[]> {
+  async getInbox(userId: string): Promise<any[]> {
     try {
-      // Get direct messages
+      // Get direct messages with sender info
       const directMessages = await db
         .select({
           id: notifications.id,
@@ -69,12 +69,17 @@ export class NotificationService {
           type: notifications.type,
           isRead: notifications.isRead,
           createdAt: notifications.createdAt,
+          fromUser: {
+            name: users.name,
+            role: users.role,
+          }
         })
         .from(notifications)
+        .leftJoin(users, eq(notifications.fromUserId, users.id))
         .where(eq(notifications.toUserId, userId))
         .orderBy(desc(notifications.createdAt));
 
-      // Get broadcast messages
+      // Get broadcast messages with sender info
       const broadcastMessages = await db
         .select({
           id: notifications.id,
@@ -85,8 +90,13 @@ export class NotificationService {
           type: notifications.type,
           isRead: broadcastRecipients.isRead,
           createdAt: notifications.createdAt,
+          fromUser: {
+            name: users.name,
+            role: users.role,
+          }
         })
         .from(notifications)
+        .leftJoin(users, eq(notifications.fromUserId, users.id))
         .innerJoin(broadcastRecipients, eq(notifications.id, broadcastRecipients.notificationId))
         .where(eq(broadcastRecipients.recipientId, userId))
         .orderBy(desc(notifications.createdAt));
@@ -103,13 +113,50 @@ export class NotificationService {
   }
 
   // Get sent messages for a user
-  async getSentMessages(userId: string): Promise<Notification[]> {
+  async getSentMessages(userId: string): Promise<any[]> {
     try {
-      return await db
-        .select()
+      const sentMessages = await db
+        .select({
+          id: notifications.id,
+          fromUserId: notifications.fromUserId,
+          toUserId: notifications.toUserId,
+          title: notifications.title,
+          content: notifications.content,
+          type: notifications.type,
+          isRead: notifications.isRead,
+          createdAt: notifications.createdAt,
+        })
         .from(notifications)
         .where(eq(notifications.fromUserId, userId))
         .orderBy(desc(notifications.createdAt));
+
+      // Add recipient count and read count for each message
+      const messagesWithStats = await Promise.all(
+        sentMessages.map(async (message) => {
+          if (message.type === 'broadcast') {
+            const recipients = await db
+              .select()
+              .from(broadcastRecipients)
+              .where(eq(broadcastRecipients.notificationId, message.id));
+            
+            const readCount = recipients.filter(r => r.isRead).length;
+            
+            return {
+              ...message,
+              recipientCount: recipients.length,
+              readCount: readCount,
+            };
+          } else {
+            return {
+              ...message,
+              recipientCount: 1,
+              readCount: message.isRead ? 1 : 0,
+            };
+          }
+        })
+      );
+
+      return messagesWithStats;
     } catch (error) {
       console.error("Error getting sent messages:", error);
       return [];
