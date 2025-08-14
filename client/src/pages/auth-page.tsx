@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Phone, Shield, Users, GraduationCap, Heart, Settings } from "lucide-react";
 import { userRoles } from "@shared/schema";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PhoneInput } from "@/components/ui/phone-input";
 // Import the logo using the correct path
 
 const roleConfig = {
@@ -67,7 +68,7 @@ export default function AuthPage() {
     if (!phone || !role) return;
 
     try {
-      await sendOtpMutation.mutateAsync({ phone, role });
+      await sendOtpMutation.mutateAsync({ phone, role: role as any });
       setStep("otp");
     } catch (error) {
       // Error handled by mutation
@@ -177,18 +178,11 @@ export default function AuthPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="Enter your phone number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
+                    <PhoneInput
+                      value={phone}
+                      onChange={setPhone}
+                      placeholder="Enter your phone number"
+                    />
                   </div>
 
                   <Button 

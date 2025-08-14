@@ -12,6 +12,9 @@ import MockExams from "@/pages/mock-exams";
 import Settings from "@/pages/settings";
 import AuthPage from "@/pages/auth-page";
 import AdminDashboard from "@/pages/admin-dashboard";
+import TeacherDashboard from "@/pages/teacher-dashboard";
+import StudentDashboard from "@/pages/student-dashboard";
+import ParentDashboard from "@/pages/parent-dashboard";
 import NotFound from "@/pages/not-found";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -21,6 +24,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
+      {/* Admin & Coordinator Routes */}
       <ProtectedRoute path="/" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/admin" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/dashboard" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
@@ -30,6 +34,12 @@ function Router() {
       <ProtectedRoute path="/fees" component={Fees} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/mock-exams" component={MockExams} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/settings" component={Settings} allowedRoles={["admin", "coordinator"]} />
+      
+      {/* Role-specific Dashboards */}
+      <ProtectedRoute path="/teacher" component={TeacherDashboard} allowedRoles={["teacher"]} />
+      <ProtectedRoute path="/student" component={StudentDashboard} allowedRoles={["student"]} />
+      <ProtectedRoute path="/parent" component={ParentDashboard} allowedRoles={["parent"]} />
+      
       <Route component={NotFound} />
     </Switch>
   );

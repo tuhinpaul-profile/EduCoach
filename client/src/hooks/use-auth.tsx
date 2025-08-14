@@ -78,6 +78,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         title: "Login Successful",
         description: `Welcome ${user.name}!`,
       });
+      
+      // Redirect based on user role
+      const roleRoutes = {
+        admin: "/",
+        coordinator: "/",
+        teacher: "/teacher",
+        student: "/student",
+        parent: "/parent"
+      };
+      
+      const targetRoute = roleRoutes[user.role as keyof typeof roleRoutes] || "/auth";
+      window.location.href = targetRoute;
     },
     onError: (error: any) => {
       toast({
