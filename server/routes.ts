@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertQuestionSchema, questionFilterSchema } from "@shared/schema";
 import multer from "multer";
 import { parseDocumentWithAI, extractTextFromBuffer, bulkParseDocuments } from "./ai-parser";
+import { setupAuthRoutes } from "./auth-routes";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -11,6 +12,8 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication routes
+  setupAuthRoutes(app);
   // Get question statistics (moved before generic question routes)
   app.get("/api/questions/stats", async (req, res) => {
     try {

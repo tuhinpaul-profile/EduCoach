@@ -3,10 +3,49 @@ import { pgTable, text, varchar, jsonb, integer, timestamp, decimal, boolean } f
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Users table with role-based authentication
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  phone: text("phone").notNull().unique(),
+  email: text("email"),
+  name: text("name").notNull(),
+  role: text("role").notNull(), // "admin", "teacher", "student", "parent", "coordinator"
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// OTP verification table
+export const otps = pgTable("otps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  phone: text("phone").notNull(),
+  otp: text("otp").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  isUsed: boolean("is_used").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Notifications table
+export const notifications = pgTable("notifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fromUserId: varchar("from_user_id").notNull().references(() => users.id),
+  toUserId: varchar("to_user_id").references(() => users.id), // null for broadcasts
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  type: text("type").notNull(), // "message", "broadcast", "alert", "reminder"
+  isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Broadcast recipients (for tracking who received broadcast messages)
+export const broadcastRecipients = pgTable("broadcast_recipients", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  notificationId: varchar("notification_id").notNull().references(() => notifications.id),
+  recipientId: varchar("recipient_id").notNull().references(() => users.id),
+  isRead: boolean("is_read").default(false),
+  readAt: timestamp("read_at"),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const questions = pgTable("questions", {
@@ -119,11 +158,31 @@ export const questionTypes = [
 
 export const subjects = ["Physics", "Chemistry", "Mathematics", "Biology"] as const;
 export const difficulties = ["Easy", "Medium", "Hard"] as const;
+export const userRoles = ["admin", "teacher", "student", "parent", "coordinator"] as const;
+export const notificationTypes = ["message", "broadcast", "alert", "reminder"] as const;
 
 // Insert schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastLoginAt: true,
+});
+
+export const insertOtpSchema = createInsertSchema(otps).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertNotificationSchema = createInsertSchema(notifications).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertBroadcastRecipientSchema = createInsertSchema(broadcastRecipients).omit({
+  id: true,
+  createdAt: true,
+  readAt: true,
 });
 
 export const insertQuestionSchema = createInsertSchema(questions).omit({
@@ -174,6 +233,27 @@ export const questionFilterSchema = z.object({
   search: z.string().optional(),
 });
 
+// Auth schemas
+export const loginSchema = z.object({
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  role: z.enum(userRoles),
+});
+
+export const verifyOtpSchema = z.object({
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  otp: z.string().length(6, "OTP must be 6 digits"),
+});
+
+export const sendNotificationSchema = z.object({
+  toUserId: z.string().optional(),
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  type: z.enum(notificationTypes),
+  recipients: z.array(z.string()).optional(), // for broadcasts
+});
+
+// Type exports
+
 export const studentFilterSchema = z.object({
   batchId: z.string().optional(),
   isActive: z.boolean().optional(),
@@ -195,6 +275,11 @@ export const feeFilterSchema = z.object({
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type InsertOtp = z.infer<typeof insertOtpSchema>;
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+export type BroadcastRecipient = typeof broadcastRecipients.$inferSelect;
+export type InsertBroadcastRecipient = z.infer<typeof insertBroadcastRecipientSchema>;
 export type Question = typeof questions.$inferSelect;
 export type InsertQuestion = z.infer<typeof insertQuestionSchema>;
 export type QuestionFilter = z.infer<typeof questionFilterSchema>;

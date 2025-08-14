@@ -10,19 +10,25 @@ import Attendance from "@/pages/attendance";
 import Fees from "@/pages/fees";
 import MockExams from "@/pages/mock-exams";
 import Settings from "@/pages/settings";
+import AuthPage from "@/pages/auth-page";
+import AdminDashboard from "@/pages/admin-dashboard";
 import NotFound from "@/pages/not-found";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/lib/protected-route";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/question-bank" component={QuestionBank} />
-      <Route path="/students" component={Students} />
-      <Route path="/attendance" component={Attendance} />
-      <Route path="/fees" component={Fees} />
-      <Route path="/mock-exams" component={MockExams} />
-      <Route path="/settings" component={Settings} />
+      <Route path="/auth" component={AuthPage} />
+      <ProtectedRoute path="/" component={Dashboard} />
+      <ProtectedRoute path="/dashboard" component={Dashboard} />
+      <ProtectedRoute path="/admin" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/question-bank" component={QuestionBank} allowedRoles={["admin", "teacher", "coordinator"]} />
+      <ProtectedRoute path="/students" component={Students} allowedRoles={["admin", "teacher", "coordinator"]} />
+      <ProtectedRoute path="/attendance" component={Attendance} allowedRoles={["admin", "teacher", "coordinator"]} />
+      <ProtectedRoute path="/fees" component={Fees} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/mock-exams" component={MockExams} allowedRoles={["admin", "teacher", "coordinator"]} />
+      <ProtectedRoute path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -31,10 +37,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
