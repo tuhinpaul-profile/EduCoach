@@ -81,8 +81,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Redirect based on user role
       const roleRoutes = {
-        admin: "/",
-        coordinator: "/",
+        admin: "/dashboard",
+        coordinator: "/dashboard",
         teacher: "/teacher",
         student: "/student",
         parent: "/parent"

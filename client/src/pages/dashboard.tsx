@@ -36,7 +36,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-neutral-800">Dashboard</h2>
-              <p className="text-neutral-600 mt-1">Welcome back! Here's what's happening at ZeroKelvin today.</p>
+              <p className="text-neutral-600 mt-1">Welcome back! Here's what's happening at EduConnect today.</p>
             </div>
             <div className="text-sm text-neutral-500">
               {new Date().toLocaleDateString('en-US', { 
