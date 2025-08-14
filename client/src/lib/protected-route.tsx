@@ -36,10 +36,10 @@ export function ProtectedRoute({
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return (
       <Route path={path}>
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
           <div className="text-center space-y-4">
-            <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
-            <p className="text-gray-600">You don't have permission to access this page.</p>
+            <h1 className="text-2xl font-bold text-red-600 dark:text-red-400">Access Denied</h1>
+            <p className="text-gray-600 dark:text-gray-400">You don't have permission to access this page.</p>
           </div>
         </div>
       </Route>

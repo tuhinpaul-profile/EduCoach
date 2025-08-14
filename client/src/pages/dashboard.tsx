@@ -27,18 +27,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex bg-neutral-50">
+    <div className="min-h-screen flex bg-neutral-50 dark:bg-gray-900">
       <Sidebar />
       
       <div className="flex-1 ml-64">
         {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-neutral-200 px-8 py-4">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-neutral-200 dark:border-gray-700 px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-neutral-800">Dashboard</h2>
-              <p className="text-neutral-600 mt-1">Welcome back! Here's what's happening at EduConnect today.</p>
+              <h2 className="text-2xl font-bold text-neutral-800 dark:text-gray-200">Dashboard</h2>
+              <p className="text-neutral-600 dark:text-gray-400 mt-1">Welcome back! Here's what's happening at EduConnect today.</p>
             </div>
-            <div className="text-sm text-neutral-500">
+            <div className="text-sm text-neutral-500 dark:text-gray-400">
               {new Date().toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 

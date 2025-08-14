@@ -33,8 +33,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-64 bg-white shadow-lg border-r border-neutral-200 fixed h-full z-10">
-      <div className="p-6 border-b border-neutral-200">
+    <div className="w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-neutral-200 dark:border-gray-700 fixed h-full z-10">
+      <div className="p-6 border-b border-neutral-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 200 200" className="text-white">
@@ -63,8 +63,8 @@ export default function Sidebar() {
             <Link key={item.href} href={item.href}>
               <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
                 isActive 
-                  ? "bg-primary text-white" 
-                  : "text-neutral-600 hover:bg-neutral-100"
+                  ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white" 
+                  : "text-neutral-600 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700"
               }`}>
                 <Icon className="w-5 h-5" />
                 <span>{item.label}</span>
