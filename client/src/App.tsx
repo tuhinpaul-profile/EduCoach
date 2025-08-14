@@ -18,7 +18,7 @@ import ParentDashboard from "@/pages/parent-dashboard";
 import NotFound from "@/pages/not-found";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/lib/theme-provider";
 
 function Router() {
   return (
@@ -47,7 +47,7 @@ function Router() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="zerokelvin-theme">
+    <ThemeProvider defaultTheme="system" storageKey="educonnect-theme">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>

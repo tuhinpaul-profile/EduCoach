@@ -129,8 +129,8 @@ export default function AuthPage() {
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Test Login Credentials:</h3>
               <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                <p><strong>Admin:</strong> +91 8475354789 or +919876543210</p>
-                <p><strong>Coordinator:</strong> +91 9231978777 or +919876543211</p>
+                <p><strong>Admin:</strong> +918475354789 or +919876543210</p>
+                <p><strong>Coordinator:</strong> +919231978777 or +919876543211</p>
                 <p><strong>Teacher:</strong> +918888888888 or +919876543212</p>
                 <p><strong>Student:</strong> +919999999999 or +919876543213</p>
                 <p><strong>Parent:</strong> +917777777777 or +919876543214</p>

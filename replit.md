@@ -87,11 +87,12 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Updates (August 2025)
 
-## Complete Platform Rebranding to ZeroKelvin
-- Rebranded entire application from EduManage Pro to ZeroKelvin
-- Integrated custom ZeroKelvin logo and branding elements
-- Updated color scheme to match ZeroKelvin brand (red and gray theme)
-- Created professional gradient logos and brand elements
+## Complete Platform Rebranding to EduConnect
+- Rebranded entire application from ZeroKelvin to EduConnect
+- Integrated custom EduConnect logo with blue/purple/cyan gradient theme
+- Updated color scheme to match EduConnect brand (blue, purple, cyan gradients)
+- Created professional education-focused logos and brand elements
+- Added comprehensive theme support with dark/light mode toggle
 
 ## Multi-Role Authentication System
 - Implemented comprehensive 5-role authentication (Admin, Teacher, Student, Parent, Coordinator)
@@ -105,6 +106,7 @@ Preferred communication style: Simple, everyday language.
 - Implemented ThemeToggle component with system preference detection
 - Updated all UI components to support both themes seamlessly
 - Configured Tailwind CSS for proper dark mode support
+- Added theme toggle to all dashboard pages and auth page
 
 ## Admin/Coordinator Dashboard
 - Built comprehensive admin dashboard with real-time statistics
@@ -125,3 +127,6 @@ Preferred communication style: Simple, everyday language.
 - Added comprehensive error handling and validation
 - Implemented proper TypeScript typing throughout
 - Created seed data system for easy testing and development
+- Fixed phone number authentication format issues
+- Added international phone input with country code selection
+- Implemented proper role-based redirection after login

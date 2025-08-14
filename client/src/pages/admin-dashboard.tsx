@@ -147,12 +147,20 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-red-600 to-gray-800 rounded flex items-center justify-center">
-                <span className="text-white font-bold text-xs">ZK</span>
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 200 200" className="text-white">
+                  <g transform="translate(100, 100)">
+                    <rect x="-18" y="-10" width="36" height="20" rx="2" fill="currentColor" />
+                    <rect x="-16" y="-8" width="32" height="16" rx="1" fill="white" />
+                    <line x1="-10" y1="-5" x2="10" y2="-5" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="-10" y1="-1" x2="10" y2="-1" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="-10" y1="3" x2="6" y2="3" stroke="currentColor" strokeWidth="1.5" />
+                  </g>
+                </svg>
               </div>
               <div className="flex items-center gap-3">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-gray-800 dark:from-red-500 dark:to-gray-200 bg-clip-text text-transparent">
-                  ZeroKelvin
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                  EduConnect
                 </h1>
                 <Badge variant="secondary">{user.role}</Badge>
               </div>
