@@ -1,32 +1,22 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { MessageInbox } from "@/components/message-inbox";
+import { MessageSent } from "@/components/message-sent";
+import { MessageComposer } from "@/components/message-composer";
 import { 
   Users, 
-  MessageSquare, 
-  Send, 
-  Inbox, 
-  Bell, 
-  Settings, 
-  Plus,
-  Calendar,
-  Clock,
+  Calendar as CalendarIcon,
   IndianRupee,
   BookOpen,
-  LogOut
+  TrendingUp,
+  UserCheck,
+  Clock,
+  GraduationCap
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-// Import the logo using the correct path
 
 interface DashboardStats {
   totalStudents: number;
@@ -37,40 +27,9 @@ interface DashboardStats {
   feesCollected: number;
 }
 
-interface Notification {
-  id: string;
-  title: string;
-  content: string;
-  type: string;
-  isRead: boolean;
-  createdAt: string;
-  fromUserId: string;
-}
-
-interface User {
-  id: string;
-  name: string;
-  role: string;
-  phone: string;
-}
-
-interface Batch {
-  id: string;
-  name: string;
-  subject: string;
-  timings: string;
-  fees: number;
-  maxStudents: number;
-  currentStudents: number;
-  startDate: string;
-  isActive: boolean;
-}
-
 export default function AdminDashboard() {
   const { user, logoutMutation } = useAuth();
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [messageModal, setMessageModal] = useState(false);
-  const [batchModal, setBatchModal] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   // Dashboard stats query
   const { data: stats } = useQuery<DashboardStats>({
@@ -81,56 +40,20 @@ export default function AdminDashboard() {
     },
   });
 
-  // Notifications queries
-  const { data: inbox = [] } = useQuery<Notification[]>({
-    queryKey: ["/api/notifications/inbox"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/api/notifications/inbox");
-      return res.json();
-    },
-  });
-
-  const { data: sent = [] } = useQuery<Notification[]>({
-    queryKey: ["/api/notifications/sent"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/api/notifications/sent");
-      return res.json();
-    },
-  });
-
-  const { data: unreadCount = 0 } = useQuery<{ count: number }>({
+  // Unread count query for sidebar
+  const { data: unreadCount = 0 } = useQuery<number>({
     queryKey: ["/api/notifications/unread-count"],
     queryFn: async () => {
       const res = await apiRequest("GET", "/api/notifications/unread-count");
-      return res.json();
+      const data = await res.json();
+      return data.count || 0;
     },
-  }).data?.count || 0;
-
-  // Users query for message recipients
-  const { data: teachers = [] } = useQuery<User[]>({
-    queryKey: ["/api/auth/users/teacher"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/api/auth/users/teacher");
-      return res.json();
-    },
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  const { data: students = [] } = useQuery<User[]>({
-    queryKey: ["/api/auth/users/student"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/api/auth/users/student");
-      return res.json();
-    },
-  });
-
-  // Batches query
-  const { data: batches = [] } = useQuery<Batch[]>({
-    queryKey: ["/api/batches"],
-    queryFn: async () => {
-      const res = await apiRequest("GET", "/api/batches");
-      return res.json();
-    },
-  });
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+  };
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -140,459 +63,217 @@ export default function AdminDashboard() {
     return null;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 200 200" className="text-white">
-                  <g transform="translate(100, 100)">
-                    <rect x="-18" y="-10" width="36" height="20" rx="2" fill="currentColor" />
-                    <rect x="-16" y="-8" width="32" height="16" rx="1" fill="white" />
-                    <line x1="-10" y1="-5" x2="10" y2="-5" stroke="currentColor" strokeWidth="1.5" />
-                    <line x1="-10" y1="-1" x2="10" y2="-1" stroke="currentColor" strokeWidth="1.5" />
-                    <line x1="-10" y1="3" x2="6" y2="3" stroke="currentColor" strokeWidth="1.5" />
-                  </g>
-                </svg>
-              </div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                  EduConnect
-                </h1>
-                <Badge variant="secondary">{user.role}</Badge>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Welcome, {user.name}</span>
-              <ThemeToggle />
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Dashboard
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Messages
-              {unreadCount > 0 && (
-                <Badge variant="destructive" className="ml-1 text-xs">
-                  {unreadCount}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="batches" className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4" />
-              Batches
-            </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Users
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Dashboard Tab */}
-          <TabsContent value="dashboard" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats?.totalStudents || 0}</div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Today's Attendance</CardTitle>
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats?.todayAttendance || 0}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {stats?.attendancePercentage || 0}% attendance rate
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Pending Fees</CardTitle>
-                  <IndianRupee className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">₹{stats?.pendingFees?.toLocaleString() || 0}</div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Batches</CardTitle>
-                  <BookOpen className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats?.activeBatches || 0}</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>Latest system activities</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">New student enrollment</p>
-                      <p className="text-xs text-gray-500">2 minutes ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Fee payment received</p>
-                      <p className="text-xs text-gray-500">15 minutes ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Attendance marked</p>
-                      <p className="text-xs text-gray-500">30 minutes ago</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                  <CardDescription>Common administrative tasks</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button className="w-full justify-start" onClick={() => setMessageModal(true)}>
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Send Notification
-                  </Button>
-                  <Button className="w-full justify-start" onClick={() => setBatchModal(true)}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Batch
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Users className="w-4 h-4 mr-2" />
-                    Manage Students
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Notifications Tab */}
-          <TabsContent value="notifications" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Notifications & Messages</h2>
-              <Button onClick={() => setMessageModal(true)}>
-                <Send className="w-4 h-4 mr-2" />
-                Send Message
-              </Button>
-            </div>
-
-            <Tabs defaultValue="inbox" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="inbox" className="flex items-center gap-2">
-                  <Inbox className="w-4 h-4" />
-                  Inbox ({inbox.length})
-                </TabsTrigger>
-                <TabsTrigger value="sent" className="flex items-center gap-2">
-                  <Send className="w-4 h-4" />
-                  Sent ({sent.length})
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="inbox" className="space-y-4">
-                {inbox.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-6 text-center text-gray-500">
-                      No messages in inbox
-                    </CardContent>
-                  </Card>
-                ) : (
-                  inbox.map((message) => (
-                    <Card key={message.id} className={!message.isRead ? "border-blue-500" : ""}>
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-lg">{message.title}</CardTitle>
-                          <div className="flex items-center gap-2">
-                            {!message.isRead && <Badge variant="destructive">New</Badge>}
-                            <Badge variant="outline">{message.type}</Badge>
-                          </div>
-                        </div>
-                        <CardDescription>
-                          {new Date(message.createdAt).toLocaleString()}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-700">{message.content}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </TabsContent>
-
-              <TabsContent value="sent" className="space-y-4">
-                {sent.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-6 text-center text-gray-500">
-                      No sent messages
-                    </CardContent>
-                  </Card>
-                ) : (
-                  sent.map((message) => (
-                    <Card key={message.id}>
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-lg">{message.title}</CardTitle>
-                          <Badge variant="outline">{message.type}</Badge>
-                        </div>
-                        <CardDescription>
-                          {new Date(message.createdAt).toLocaleString()}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-700">{message.content}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </TabsContent>
-            </Tabs>
-          </TabsContent>
-
-          {/* Batches Tab */}
-          <TabsContent value="batches" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Batch Management</h2>
-              <Button onClick={() => setBatchModal(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Create Batch
-              </Button>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {batches.map((batch) => (
-                <Card key={batch.id}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg">{batch.name}</CardTitle>
-                      <Badge variant={batch.isActive ? "default" : "secondary"}>
-                        {batch.isActive ? "Active" : "Inactive"}
-                      </Badge>
-                    </div>
-                    <CardDescription>{batch.subject}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4" />
-                      {batch.timings}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <IndianRupee className="w-4 h-4" />
-                      ₹{batch.fees}/month
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4" />
-                      {batch.currentStudents}/{batch.maxStudents} students
-                    </div>
-                    <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="flex-1">
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
-                        View
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Users Tab */}
-          <TabsContent value="users" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">User Management</h2>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add User
-              </Button>
-            </div>
-
-            <Tabs defaultValue="teachers" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="teachers">Teachers ({teachers.length})</TabsTrigger>
-                <TabsTrigger value="students">Students ({students.length})</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="teachers" className="space-y-4">
-                <div className="grid gap-4">
-                  {teachers.map((teacher) => (
-                    <Card key={teacher.id}>
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="font-medium">{teacher.name}</h3>
-                            <p className="text-sm text-gray-500">{teacher.phone}</p>
-                          </div>
-                          <Badge variant="outline">{teacher.role}</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="students" className="space-y-4">
-                <div className="grid gap-4">
-                  {students.map((student) => (
-                    <Card key={student.id}>
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="font-medium">{student.name}</h3>
-                            <p className="text-sm text-gray-500">{student.phone}</p>
-                          </div>
-                          <Badge variant="outline">{student.role}</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </TabsContent>
-        </Tabs>
+  // Dashboard Overview Component
+  const DashboardOverview = () => (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Dashboard Overview</h2>
+        <p className="text-muted-foreground">Welcome back, {user.name}. Here's what's happening at your educational center.</p>
       </div>
 
-      {/* Message Modal */}
-      <Dialog open={messageModal} onOpenChange={setMessageModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Send Message/Notification</DialogTitle>
-            <DialogDescription>
-              Send a message to specific users or broadcast to multiple recipients
-            </DialogDescription>
-          </DialogHeader>
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label>Message Type</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="message">Direct Message</SelectItem>
-                  <SelectItem value="broadcast">Broadcast</SelectItem>
-                  <SelectItem value="alert">Alert</SelectItem>
-                </SelectContent>
-              </Select>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                <p className="text-2xl font-bold text-foreground">{stats?.totalStudents || 0}</p>
+              </div>
+              <Users className="h-8 w-8 text-blue-500" />
             </div>
-            <div className="space-y-2">
-              <Label>Recipients</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select recipients" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all-teachers">All Teachers</SelectItem>
-                  <SelectItem value="all-students">All Students</SelectItem>
-                  <SelectItem value="all-parents">All Parents</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center mt-4 text-sm">
+              <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+              <span className="text-green-600">+5% from last month</span>
             </div>
-            <div className="space-y-2">
-              <Label>Title</Label>
-              <Input placeholder="Message title" />
-            </div>
-            <div className="space-y-2">
-              <Label>Content</Label>
-              <Textarea placeholder="Message content" rows={4} />
-            </div>
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={() => setMessageModal(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Send Message</Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
 
-      {/* Batch Modal */}
-      <Dialog open={batchModal} onOpenChange={setBatchModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Create New Batch</DialogTitle>
-            <DialogDescription>
-              Add a new batch for students
-            </DialogDescription>
-          </DialogHeader>
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label>Batch Name</Label>
-              <Input placeholder="e.g., Physics JEE Main 2025" />
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Today's Attendance</p>
+                <p className="text-2xl font-bold text-foreground">{stats?.todayAttendance || 0}</p>
+              </div>
+              <UserCheck className="h-8 w-8 text-green-500" />
             </div>
-            <div className="space-y-2">
-              <Label>Subject</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select subject" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="physics">Physics</SelectItem>
-                  <SelectItem value="chemistry">Chemistry</SelectItem>
-                  <SelectItem value="mathematics">Mathematics</SelectItem>
-                  <SelectItem value="biology">Biology</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center mt-4 text-sm">
+              <span className="text-muted-foreground">
+                {stats?.attendancePercentage || 0}% attendance rate
+              </span>
             </div>
-            <div className="space-y-2">
-              <Label>Timings</Label>
-              <Input placeholder="e.g., Mon-Fri 10:00-12:00" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Pending Fees</p>
+                <p className="text-2xl font-bold text-foreground">₹{stats?.pendingFees || 0}</p>
+              </div>
+              <IndianRupee className="h-8 w-8 text-orange-500" />
             </div>
-            <div className="space-y-2">
-              <Label>Monthly Fees</Label>
-              <Input type="number" placeholder="5000" />
+            <div className="flex items-center mt-4 text-sm">
+              <Clock className="h-4 w-4 text-orange-500 mr-1" />
+              <span className="text-orange-600">Requires attention</span>
             </div>
-            <div className="space-y-2">
-              <Label>Maximum Students</Label>
-              <Input type="number" placeholder="30" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Active Batches</p>
+                <p className="text-2xl font-bold text-foreground">{stats?.activeBatches || 0}</p>
+              </div>
+              <GraduationCap className="h-8 w-8 text-purple-500" />
             </div>
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={() => setBatchModal(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Create Batch</Button>
+            <div className="flex items-center mt-4 text-sm">
+              <span className="text-muted-foreground">
+                Across all subjects
+              </span>
             </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+          <CardDescription>Frequently used administrative functions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button 
+              onClick={() => setActiveSection("compose")}
+              className="flex flex-col items-center p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+            >
+              <CalendarIcon className="h-6 w-6 text-blue-500 mb-2" />
+              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Send Message</span>
+            </button>
+            <button 
+              onClick={() => setActiveSection("users")}
+              className="flex flex-col items-center p-4 rounded-lg bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+            >
+              <Users className="h-6 w-6 text-green-500 mb-2" />
+              <span className="text-sm font-medium text-green-700 dark:text-green-300">Manage Users</span>
+            </button>
+            <button 
+              onClick={() => setActiveSection("batches")}
+              className="flex flex-col items-center p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+            >
+              <GraduationCap className="h-6 w-6 text-purple-500 mb-2" />
+              <span className="text-sm font-medium text-purple-700 dark:text-purple-300">View Batches</span>
+            </button>
+            <button 
+              onClick={() => setActiveSection("question-bank")}
+              className="flex flex-col items-center p-4 rounded-lg bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
+            >
+              <BookOpen className="h-6 w-6 text-orange-500 mb-2" />
+              <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Question Bank</span>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Render different sections based on activeSection
+  const renderContent = () => {
+    switch (activeSection) {
+      case "dashboard":
+        return <DashboardOverview />;
+      case "inbox":
+        return <MessageInbox />;
+      case "sent":
+        return <MessageSent />;
+      case "compose":
+        return <MessageComposer onMessageSent={() => setActiveSection("sent")} />;
+      case "users":
+        return (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>Manage teachers, students, and coordinators</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-8">User management interface coming soon...</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      case "batches":
+        return (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Batch Management</CardTitle>
+                <CardDescription>Create and manage teaching batches</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-8">Batch management interface coming soon...</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      case "question-bank":
+        return (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Question Bank</CardTitle>
+                <CardDescription>Manage questions and assessments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-8">Question bank interface coming soon...</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      case "settings":
+        return (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>Configure system preferences</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-muted-foreground py-8">Settings interface coming soon...</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      default:
+        return <DashboardOverview />;
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-background">
+      {/* Sidebar */}
+      <AdminSidebar
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+        unreadCount={unreadCount}
+        onLogout={handleLogout}
+        userName={user.name}
+        userRole={user.role}
+      />
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto">
+          <div className="p-6 max-w-7xl mx-auto">
+            {renderContent()}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
