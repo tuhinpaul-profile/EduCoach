@@ -7,6 +7,7 @@ import {
 import { User, loginSchema, verifyOtpSchema } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import { z } from "zod";
 
 type AuthContextType = {
@@ -25,6 +26,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   const {
     data: user,
@@ -89,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
       
       const targetRoute = roleRoutes[user.role as keyof typeof roleRoutes] || "/auth";
-      window.location.href = targetRoute;
+      setLocation(targetRoute);
     },
     onError: (error: any) => {
       toast({
@@ -107,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: () => {
       queryClient.setQueryData(["/api/auth/user"], null);
       queryClient.clear();
+      setLocation("/auth");
       toast({
         title: "Logged Out",
         description: "You have been successfully logged out",

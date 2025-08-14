@@ -4,7 +4,7 @@ import { Redirect, Route } from "wouter";
 
 interface ProtectedRouteProps {
   path: string;
-  component: React.ComponentType;
+  component: React.ComponentType<any>;
   allowedRoles?: string[];
 }
 
@@ -15,36 +15,37 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <Route path={path}>
-        <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-border" />
-        </div>
-      </Route>
-    );
-  }
+  return (
+    <Route path={path}>
+      {(params) => {
+        if (isLoading) {
+          return (
+            <div className="flex items-center justify-center min-h-screen">
+              <Loader2 className="h-8 w-8 animate-spin text-border" />
+            </div>
+          );
+        }
 
-  if (!user) {
-    return (
-      <Route path={path}>
-        <Redirect to="/auth" />
-      </Route>
-    );
-  }
+        if (!user) {
+          return <Redirect to="/auth" />;
+        }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return (
-      <Route path={path}>
-        <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-          <div className="text-center space-y-4">
-            <h1 className="text-2xl font-bold text-red-600 dark:text-red-400">Access Denied</h1>
-            <p className="text-gray-600 dark:text-gray-400">You don't have permission to access this page.</p>
-          </div>
-        </div>
-      </Route>
-    );
-  }
+        if (allowedRoles && !allowedRoles.includes(user.role)) {
+          // Instead of showing access denied, redirect to appropriate role-based dashboard
+          const roleRoutes = {
+            admin: "/dashboard",
+            coordinator: "/dashboard", 
+            teacher: "/teacher",
+            student: "/student",
+            parent: "/parent"
+          };
+          
+          const targetRoute = roleRoutes[user.role as keyof typeof roleRoutes] || "/auth";
+          return <Redirect to={targetRoute} />;
+        }
 
-  return <Route path={path} component={Component} />;
+        return <Component {...params} />;
+      }}
+    </Route>
+  );
 }
