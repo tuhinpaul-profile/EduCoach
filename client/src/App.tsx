@@ -25,9 +25,9 @@ function Router() {
     <Switch>
       <Route path="/auth" component={AuthPage} />
       {/* Admin & Coordinator Routes */}
-      <ProtectedRoute path="/" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
-      <ProtectedRoute path="/admin" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
-      <ProtectedRoute path="/dashboard" component={AdminDashboard} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/admin" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
+      <ProtectedRoute path="/dashboard" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/question-bank" component={QuestionBank} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/students" component={Students} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/attendance" component={Attendance} allowedRoles={["admin", "coordinator"]} />
