@@ -1,4 +1,6 @@
 import { Link, useLocation } from "wouter";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { 
   GraduationCap, 
   LayoutDashboard, 
@@ -8,19 +10,38 @@ import {
   CheckCircle, 
   DollarSign, 
   Settings,
-  LogOut
+  LogOut,
+  MessageSquare,
+  ChevronDown,
+  ChevronRight,
+  Inbox,
+  Send,
+  Edit
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";
+import { Badge } from "@/components/ui/badge";
+import { MessageComposer } from "@/components/message-composer";
+import { MessageInbox } from "@/components/message-inbox";
+import { MessageSent } from "@/components/message-sent";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function Sidebar() {
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
+  const [messagesExpanded, setMessagesExpanded] = useState(false);
+  const [activeMessageView, setActiveMessageView] = useState<"inbox" | "sent" | "compose" | null>(null);
 
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+
+  // Get unread count
+  const { data: unreadCount } = useQuery({
+    queryKey: ["/api/notifications/unread-count"],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -72,6 +93,74 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Messages Section */}
+        <div className="mt-4">
+          <div 
+            className={`flex items-center justify-between px-4 py-3 rounded-lg transition-colors cursor-pointer ${
+              messagesExpanded 
+                ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white" 
+                : "text-neutral-600 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700"
+            }`}
+            onClick={() => setMessagesExpanded(!messagesExpanded)}
+          >
+            <div className="flex items-center space-x-3">
+              <MessageSquare className="w-5 h-5" />
+              <span>Messages</span>
+              {unreadCount?.count > 0 && (
+                <Badge variant="destructive" className="ml-auto">
+                  {unreadCount.count}
+                </Badge>
+              )}
+            </div>
+            {messagesExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </div>
+
+          {messagesExpanded && (
+            <div className="ml-6 mt-2 space-y-1">
+              <Dialog open={activeMessageView === "inbox"} onOpenChange={(open) => setActiveMessageView(open ? "inbox" : null)}>
+                <DialogTrigger asChild>
+                  <div className="flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors cursor-pointer text-neutral-600 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700">
+                    <Inbox className="w-4 h-4" />
+                    <span>Inbox</span>
+                    {unreadCount?.count > 0 && (
+                      <Badge variant="destructive" className="ml-auto text-xs">
+                        {unreadCount.count}
+                      </Badge>
+                    )}
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <MessageInbox />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={activeMessageView === "sent"} onOpenChange={(open) => setActiveMessageView(open ? "sent" : null)}>
+                <DialogTrigger asChild>
+                  <div className="flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors cursor-pointer text-neutral-600 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700">
+                    <Send className="w-4 h-4" />
+                    <span>Sent</span>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <MessageSent />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={activeMessageView === "compose"} onOpenChange={(open) => setActiveMessageView(open ? "compose" : null)}>
+                <DialogTrigger asChild>
+                  <div className="flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors cursor-pointer text-neutral-600 dark:text-gray-300 hover:bg-neutral-100 dark:hover:bg-gray-700">
+                    <Edit className="w-4 h-4" />
+                    <span>Compose</span>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <MessageComposer onSuccess={() => setActiveMessageView(null)} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+        </div>
       </nav>
       
       {/* Bottom section with user info and logout */}

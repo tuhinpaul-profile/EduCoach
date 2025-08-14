@@ -21,9 +21,10 @@ interface User {
 
 interface MessageComposerProps {
   onMessageSent?: () => void;
+  onSuccess?: () => void;
 }
 
-export function MessageComposer({ onMessageSent }: MessageComposerProps) {
+export function MessageComposer({ onMessageSent, onSuccess }: MessageComposerProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [recipientType, setRecipientType] = useState<"all" | "role" | "individual">("all");
@@ -126,6 +127,7 @@ export function MessageComposer({ onMessageSent }: MessageComposerProps) {
       queryClient.invalidateQueries({ queryKey: ["/api/notifications"] });
       
       onMessageSent?.();
+      onSuccess?.();
     },
     onError: (error: any) => {
       toast({
