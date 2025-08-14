@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { InsertQuestion } from "@shared/schema";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 interface ParseOptions {
   subject: string;
@@ -14,6 +14,10 @@ export async function parseDocumentWithAI(
   documentText: string,
   options: ParseOptions
 ): Promise<InsertQuestion[]> {
+  if (!openai) {
+    throw new Error("OpenAI API key is not configured. Please provide OPENAI_API_KEY environment variable.");
+  }
+  
   try {
     const prompt = `
 You are an expert educational content parser. Parse the following document text and extract questions in JSON format.
