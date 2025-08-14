@@ -101,19 +101,42 @@ export default function AuthPage() {
         <div className="space-y-8">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-red-600 to-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-2xl">ZK</span>
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+                <svg width="40" height="40" viewBox="0 0 200 200" className="text-white">
+                  <g transform="translate(100, 100)">
+                    <rect x="-25" y="-15" width="50" height="30" rx="3" fill="currentColor" />
+                    <rect x="-22" y="-12" width="44" height="24" rx="2" fill="white" />
+                    <line x1="-15" y1="-8" x2="15" y2="-8" stroke="currentColor" strokeWidth="2" />
+                    <line x1="-15" y1="-3" x2="15" y2="-3" stroke="currentColor" strokeWidth="2" />
+                    <line x1="-15" y1="2" x2="10" y2="2" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="-35" cy="-25" r="4" fill="white" />
+                    <circle cx="35" cy="-25" r="4" fill="white" />
+                    <circle cx="-35" cy="25" r="4" fill="white" />
+                    <circle cx="35" cy="25" r="4" fill="white" />
+                  </g>
+                </svg>
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-red-600 to-gray-800 dark:from-red-500 dark:to-gray-200 bg-clip-text text-transparent">
-                  ZeroKelvin
+                <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                  EduConnect
                 </h1>
-                <p className="text-lg font-medium text-gray-700 dark:text-gray-300">Educational Management System</p>
+                <p className="text-lg font-medium text-gray-700 dark:text-gray-300">Smart Learning Management</p>
               </div>
             </div>
             <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
               Comprehensive educational management platform for students, teachers, parents, and administrators
             </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Test Login Credentials:</h3>
+              <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                <p><strong>Admin:</strong> +91 8475354789 or +919876543210</p>
+                <p><strong>Coordinator:</strong> +91 9231978777 or +919876543211</p>
+                <p><strong>Teacher:</strong> +918888888888 or +919876543212</p>
+                <p><strong>Student:</strong> +919999999999 or +919876543213</p>
+                <p><strong>Parent:</strong> +917777777777 or +919876543214</p>
+                <p className="mt-2 font-medium">Use any 6-digit OTP for verification</p>
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-4">

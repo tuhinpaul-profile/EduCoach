@@ -1,0 +1,44 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#logoGradient)" />
+  
+  <!-- Inner Circle -->
+  <circle cx="100" cy="100" r="70" fill="white" fill-opacity="0.1" />
+  
+  <!-- Education Icon -->
+  <g transform="translate(100, 100)">
+    <!-- Book -->
+    <rect x="-25" y="-15" width="50" height="30" rx="3" fill="url(#iconGradient)" />
+    <rect x="-22" y="-12" width="44" height="24" rx="2" fill="white" />
+    
+    <!-- Pages -->
+    <line x1="-15" y1="-8" x2="15" y2="-8" stroke="url(#iconGradient)" stroke-width="2" />
+    <line x1="-15" y1="-3" x2="15" y2="-3" stroke="url(#iconGradient)" stroke-width="2" />
+    <line x1="-15" y1="2" x2="10" y2="2" stroke="url(#iconGradient)" stroke-width="2" />
+    <line x1="-15" y1="7" x2="12" y2="7" stroke="url(#iconGradient)" stroke-width="2" />
+    
+    <!-- Connection nodes -->
+    <circle cx="-35" cy="-25" r="6" fill="white" />
+    <circle cx="35" cy="-25" r="6" fill="white" />
+    <circle cx="-35" cy="25" r="6" fill="white" />
+    <circle cx="35" cy="25" r="6" fill="white" />
+    
+    <!-- Connection lines -->
+    <line x1="-35" y1="-25" x2="-25" y2="-15" stroke="white" stroke-width="2" />
+    <line x1="35" y1="-25" x2="25" y2="-15" stroke="white" stroke-width="2" />
+    <line x1="-35" y1="25" x2="-25" y2="15" stroke="white" stroke-width="2" />
+    <line x1="35" y1="25" x2="25" y2="15" stroke="white" stroke-width="2" />
+  </g>
+</svg>

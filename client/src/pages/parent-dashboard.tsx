@@ -19,12 +19,20 @@ export default function ParentDashboard() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-red-600 to-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">ZK</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 200 200" className="text-white">
+                  <g transform="translate(100, 100)">
+                    <rect x="-20" y="-12" width="40" height="24" rx="2" fill="currentColor" />
+                    <rect x="-18" y="-10" width="36" height="20" rx="1" fill="white" />
+                    <line x1="-12" y1="-6" x2="12" y2="-6" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="-12" y1="-2" x2="12" y2="-2" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="-12" y1="2" x2="8" y2="2" stroke="currentColor" strokeWidth="1.5" />
+                  </g>
+                </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-gray-800 bg-clip-text text-transparent">
-                  ZeroKelvin
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                  EduConnect
                 </h1>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Parent Portal</p>
               </div>
