@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import QuestionBank from "@/pages/question-bank";
 import Students from "@/pages/students";
@@ -23,9 +24,9 @@ import { ThemeProvider } from "@/lib/theme-provider";
 function Router() {
   return (
     <Switch>
+      <Route path="/" component={Landing} />
       <Route path="/auth" component={AuthPage} />
       {/* Admin & Coordinator Routes */}
-      <ProtectedRoute path="/" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/admin" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/dashboard" component={Dashboard} allowedRoles={["admin", "coordinator"]} />
       <ProtectedRoute path="/question-bank" component={QuestionBank} allowedRoles={["admin", "coordinator"]} />
