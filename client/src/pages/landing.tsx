@@ -71,7 +71,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Student Management</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Comprehensive student profiles, batch assignments, and academic tracking
+                Complete student lifecycle management with detailed profiles, parent/guardian integration, batch assignments, academic history tracking, and bulk import/export capabilities for efficient enrollment processes.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -83,7 +83,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Question Bank</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                AI-powered question creation with 11+ question types and smart categorization
+                Advanced question management with AI-powered document parsing, 11+ question types including Matrix Match and Comprehensions, hierarchical Subject→Chapter→Topic organization, and bulk upload capabilities for efficient content creation.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -95,7 +95,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Smart Communication</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Real-time messaging, notifications, and role-based communication tools
+                Comprehensive communication hub with real-time messaging, rich text editor, role-based recipient filtering, broadcast announcements, notification management, and seamless parent-teacher-student communication channels.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -107,7 +107,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Attendance Tracking</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Automated attendance management with detailed analytics and reporting
+                Digital attendance system replacing traditional registers with real-time marking, batch-wise tracking, multiple status types (Present/Absent/Late), automated parent notifications, and comprehensive analytics with trend analysis.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -119,7 +119,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Fee Management</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Streamlined fee collection, payment tracking, and automated reminders
+                Complete financial management system with flexible fee structures, multiple payment methods (Cash/Card/UPI/Bank Transfer), automated receipt generation, overdue tracking, late fee calculations, and comprehensive financial reporting.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -131,7 +131,7 @@ export default function Landing() {
               </div>
               <CardTitle className="text-gray-900 dark:text-white">Analytics & Reports</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-300">
-                Comprehensive insights and data-driven decision making tools
+                Advanced analytics dashboard with real-time statistics, performance tracking, attendance trends, financial insights, student progress monitoring, and customizable reports with PDF/Excel export capabilities for data-driven decisions.
               </CardDescription>
             </CardHeader>
           </Card>
