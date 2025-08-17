@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e293b">
+    EduConnect - System Architecture Diagram
+  </text>
+  
+  <!-- Presentation Layer -->
+  <rect x="50" y="60" width="1100" height="120" fill="#e2e8f0" stroke="#64748b" stroke-width="2" rx="8"/>
+  <text x="600" y="85" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#1e293b">
+    PRESENTATION LAYER
+  </text>
+  
+  <!-- Frontend Components -->
+  <rect x="80" y="100" width="200" height="60" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2" rx="4"/>
+  <text x="180" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    React SPA
+  </text>
+  <text x="180" y="135" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    TypeScript + Vite
+  </text>
+  <text x="180" y="150" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Tailwind + Shadcn/ui
+  </text>
+  
+  <rect x="320" y="100" width="200" height="60" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2" rx="4"/>
+  <text x="420" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Mobile PWA
+  </text>
+  <text x="420" y="135" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Responsive Design
+  </text>
+  <text x="420" y="150" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Offline Support
+  </text>
+  
+  <rect x="560" y="100" width="200" height="60" fill="#06b6d4" stroke="#0891b2" stroke-width="2" rx="4"/>
+  <text x="660" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Admin Panel
+  </text>
+  <text x="660" y="135" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Management Dashboard
+  </text>
+  <text x="660" y="150" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Analytics & Reports
+  </text>
+  
+  <rect x="800" y="100" width="200" height="60" fill="#10b981" stroke="#059669" stroke-width="2" rx="4"/>
+  <text x="900" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Role Dashboards
+  </text>
+  <text x="900" y="135" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Teacher/Student/Parent
+  </text>
+  <text x="900" y="150" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Coordinator Views
+  </text>
+  
+  <!-- Load Balancer -->
+  <rect x="500" y="200" width="200" height="40" fill="#f59e0b" stroke="#d97706" stroke-width="2" rx="4"/>
+  <text x="600" y="225" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Load Balancer / Replit
+  </text>
+  
+  <!-- Application Layer -->
+  <rect x="50" y="270" width="1100" height="200" fill="#f1f5f9" stroke="#64748b" stroke-width="2" rx="8"/>
+  <text x="600" y="295" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#1e293b">
+    APPLICATION LAYER
+  </text>
+  
+  <!-- Backend Services Row 1 -->
+  <rect x="80" y="310" width="160" height="60" fill="#ef4444" stroke="#dc2626" stroke-width="2" rx="4"/>
+  <text x="160" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    Express Server
+  </text>
+  <text x="160" y="345" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    REST API
+  </text>
+  <text x="160" y="358" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Node.js + TypeScript
+  </text>
+  
+  <rect x="260" y="310" width="160" height="60" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2" rx="4"/>
+  <text x="340" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    WebSocket Server
+  </text>
+  <text x="340" y="345" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Real-time Updates
+  </text>
+  <text x="340" y="358" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Socket.io
+  </text>
+  
+  <rect x="440" y="310" width="160" height="60" fill="#06b6d4" stroke="#0891b2" stroke-width="2" rx="4"/>
+  <text x="520" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    AI Service
+  </text>
+  <text x="520" y="345" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Document Parsing
+  </text>
+  <text x="520" y="358" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    OpenAI GPT-4o
+  </text>
+  
+  <rect x="620" y="310" width="160" height="60" fill="#10b981" stroke="#059669" stroke-width="2" rx="4"/>
+  <text x="700" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    Auth Service
+  </text>
+  <text x="700" y="345" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    OTP Verification
+  </text>
+  <text x="700" y="358" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Session Management
+  </text>
+  
+  <rect x="800" y="310" width="160" height="60" fill="#f59e0b" stroke="#d97706" stroke-width="2" rx="4"/>
+  <text x="880" y="330" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    File Processing
+  </text>
+  <text x="880" y="345" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Document Upload
+  </text>
+  <text x="880" y="358" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Multer + Storage
+  </text>
+  
+  <!-- Backend Services Row 2 -->
+  <rect x="200" y="390" width="160" height="60" fill="#84cc16" stroke="#65a30d" stroke-width="2" rx="4"/>
+  <text x="280" y="410" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    Business Logic
+  </text>
+  <text x="280" y="425" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Core Services
+  </text>
+  <text x="280" y="438" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Domain Models
+  </text>
+  
+  <rect x="380" y="390" width="160" height="60" fill="#ec4899" stroke="#db2777" stroke-width="2" rx="4"/>
+  <text x="460" y="410" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    Notification Service
+  </text>
+  <text x="460" y="425" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    SMS/Email
+  </text>
+  <text x="460" y="438" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Real-time Alerts
+  </text>
+  
+  <rect x="560" y="390" width="160" height="60" fill="#6366f1" stroke="#4f46e5" stroke-width="2" rx="4"/>
+  <text x="640" y="410" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="white">
+    Analytics Engine
+  </text>
+  <text x="640" y="425" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Performance Metrics
+  </text>
+  <text x="640" y="438" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Reporting System
+  </text>
+  
+  <!-- Data Layer -->
+  <rect x="50" y="500" width="1100" height="180" fill="#e5e7eb" stroke="#64748b" stroke-width="2" rx="8"/>
+  <text x="600" y="525" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#1e293b">
+    DATA LAYER
+  </text>
+  
+  <!-- Database Services -->
+  <rect x="150" y="540" width="200" height="80" fill="#1f2937" stroke="#111827" stroke-width="2" rx="4"/>
+  <text x="250" y="565" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    PostgreSQL
+  </text>
+  <text x="250" y="580" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Primary Database
+  </text>
+  <text x="250" y="595" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Drizzle ORM
+  </text>
+  <text x="250" y="610" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Connection Pooling
+  </text>
+  
+  <rect x="400" y="540" width="200" height="80" fill="#dc2626" stroke="#b91c1c" stroke-width="2" rx="4"/>
+  <text x="500" y="565" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    Redis Cache
+  </text>
+  <text x="500" y="580" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Session Storage
+  </text>
+  <text x="500" y="595" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Query Caching
+  </text>
+  <text x="500" y="610" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Real-time Data
+  </text>
+  
+  <rect x="650" y="540" width="200" height="80" fill="#059669" stroke="#047857" stroke-width="2" rx="4"/>
+  <text x="750" y="565" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">
+    File Storage
+  </text>
+  <text x="750" y="580" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Document Storage
+  </text>
+  <text x="750" y="595" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Image Assets
+  </text>
+  <text x="750" y="610" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    Backup Files
+  </text>
+  
+  <!-- External Services -->
+  <rect x="50" y="710" width="1100" height="60" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" rx="8"/>
+  <text x="600" y="735" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#92400e">
+    EXTERNAL SERVICES
+  </text>
+  
+  <rect x="150" y="745" width="120" height="20" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1" rx="2"/>
+  <text x="210" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    OpenAI API
+  </text>
+  
+  <rect x="290" y="745" width="120" height="20" fill="#10b981" stroke="#059669" stroke-width="1" rx="2"/>
+  <text x="350" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    SMS Gateway
+  </text>
+  
+  <rect x="430" y="745" width="120" height="20" fill="#f59e0b" stroke="#d97706" stroke-width="1" rx="2"/>
+  <text x="490" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Email Service
+  </text>
+  
+  <rect x="570" y="745" width="120" height="20" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1" rx="2"/>
+  <text x="630" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Payment Gateway
+  </text>
+  
+  <rect x="710" y="745" width="120" height="20" fill="#ef4444" stroke="#dc2626" stroke-width="1" rx="2"/>
+  <text x="770" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Cloud Storage
+  </text>
+  
+  <rect x="850" y="745" width="120" height="20" fill="#06b6d4" stroke="#0891b2" stroke-width="1" rx="2"/>
+  <text x="910" y="758" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="white">
+    Analytics Service
+  </text>
+  
+  <!-- Connection Lines -->
+  <!-- Frontend to Load Balancer -->
+  <line x1="180" y1="160" x2="600" y2="200" stroke="#64748b" stroke-width="2"/>
+  <line x1="420" y1="160" x2="600" y2="200" stroke="#64748b" stroke-width="2"/>
+  <line x1="660" y1="160" x2="600" y2="200" stroke="#64748b" stroke-width="2"/>
+  <line x1="900" y1="160" x2="600" y2="200" stroke="#64748b" stroke-width="2"/>
+  
+  <!-- Load Balancer to Application Layer -->
+  <line x1="600" y1="240" x2="600" y2="270" stroke="#64748b" stroke-width="2"/>
+  
+  <!-- Application to Data Layer -->
+  <line x1="250" y1="450" x2="250" y2="540" stroke="#64748b" stroke-width="2"/>
+  <line x1="500" y1="450" x2="500" y2="540" stroke="#64748b" stroke-width="2"/>
+  <line x1="750" y1="450" x2="750" y2="540" stroke="#64748b" stroke-width="2"/>
+  
+  <!-- External Services Connections -->
+  <line x1="520" y1="370" x2="210" y2="745" stroke="#64748b" stroke-width="1" stroke-dasharray="5,5"/>
+  <line x1="460" y1="450" x2="350" y2="745" stroke="#64748b" stroke-width="1" stroke-dasharray="5,5"/>
+  <line x1="460" y1="450" x2="490" y2="745" stroke="#64748b" stroke-width="1" stroke-dasharray="5,5"/>
+  
+  <!-- Legend -->
+  <rect x="970" y="100" width="180" height="140" fill="white" stroke="#64748b" stroke-width="1" rx="4"/>
+  <text x="1060" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#1e293b">
+    Legend
+  </text>
+  
+  <rect x="980" y="130" width="15" height="10" fill="#3b82f6"/>
+  <text x="1005" y="140" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    Frontend
+  </text>
+  
+  <rect x="980" y="145" width="15" height="10" fill="#ef4444"/>
+  <text x="1005" y="155" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    Backend
+  </text>
+  
+  <rect x="980" y="160" width="15" height="10" fill="#1f2937"/>
+  <text x="1005" y="170" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    Database
+  </text>
+  
+  <rect x="980" y="175" width="15" height="10" fill="#f59e0b"/>
+  <text x="1005" y="185" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    Infrastructure
+  </text>
+  
+  <line x1="980" y1="195" x2="995" y2="195" stroke="#64748b" stroke-width="2"/>
+  <text x="1005" y="200" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    Data Flow
+  </text>
+  
+  <line x1="980" y1="210" x2="995" y2="210" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="1005" y="215" font-family="Arial, sans-serif" font-size="9" fill="#1e293b">
+    External API
+  </text>
+</svg>
